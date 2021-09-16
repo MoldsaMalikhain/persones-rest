@@ -14,5 +14,5 @@ export default class CreatePersonesDto {
     readonly salaries: number[];
     readonly persones: number[];
     readonly managers: number[];
-    readonly role: number;
+    readonly roles: number;
 }
