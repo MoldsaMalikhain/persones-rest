@@ -44,8 +44,8 @@ export class Persones {
     @ManyToOne(type => Roles, role => role.persone)
     roles: Roles;
 
-    @OneToMany(type => Salaries, salarys => salarys.persone)
-    salarys: Salaries[];
+    @OneToMany(type => Salaries, salaries => salaries.persone)
+    salaries: Salaries[];
 
     @OneToMany(type => Absences, absences => absences.persone)
     absences: Absences[];

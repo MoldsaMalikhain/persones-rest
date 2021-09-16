@@ -26,7 +26,7 @@ export class Salaries {
     @Column()
     persone_id: number
 
-    @ManyToOne(type => Persones, persone => persone.salarys)
+    @ManyToOne(type => Persones, persone => persone.salaries)
     persone: Persones;
 
     @ManyToOne(type => Currencies, currency => currency.salaries)
