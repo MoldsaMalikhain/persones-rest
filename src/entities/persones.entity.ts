@@ -12,18 +12,6 @@ import { Skills } from "./skills.entity";
 
 @Entity()
 export class Persones {
-    // static create(): Persones {
-    //     throw new Error('Method not implemented.');
-    // }
-    // static save(personeEntity: Persones) {
-    //     throw new Error('Method not implemented.');
-    // }
-    // static find(): Persones[] | PromiseLike<Persones[]> {
-    //     throw new Error('Method not implemented.');
-    // }
-    // static findOne(arg0: { where: { id: number; }; relations: string[]; }): Persones | PromiseLike<Persones> {
-    //     throw new Error('Method not implemented.');
-    // }
     @PrimaryGeneratedColumn()
     id: number
 
@@ -32,9 +20,6 @@ export class Persones {
 
     @Column({ length: 45 })
     age: string;
-
-    @Column()
-    role: number;
 
     @Column()
     nameOnProject: number;
@@ -71,8 +56,4 @@ export class Persones {
     @OneToMany(type => Notes, managers => managers.user_m)
     managers: Notes[]
 
-
-
-    // @Column({ default: true })
-    // isActive: boolean
 }

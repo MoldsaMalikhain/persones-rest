@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { DeleteDateColumn } from 'typeorm';
 import CreatePersonesDto from './create-persones.dto';
 import { PersonesService } from './persones.service';
 
@@ -22,4 +23,9 @@ export class PersonesController {
   getSkills(@Body(`persone_id`, ParseIntPipe) persone_id: number) {
     return this.personesServis.getSkillsOfPerson(persone_id);
   }
+
+  // @Delete(':id')
+  // deletePersone(@Param('id') persone_id: number) {
+  //   return this.personesServis.deletePersone(persone_id);
+  // }
 }
