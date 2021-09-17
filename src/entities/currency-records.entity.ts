@@ -38,4 +38,5 @@ export class CurrencyRecords {
 
     @ManyToOne(type => Companies, company => company.records)
     company: Companies;
+    currencyEntity: CurrencyRecords;
 }

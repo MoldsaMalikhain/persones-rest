@@ -8,7 +8,6 @@ export class SkillsController {
 
     constructor(private readonly skillService: SkillsService) { }
 
-
     @Post()
     insert(@Body() createSkillDto: CreateSkillsDto) {
         return this.skillService.createSkill(createSkillDto)
@@ -17,6 +16,11 @@ export class SkillsController {
     @Get()
     getSkills() {
         return this.skillService.getSkills()
+    }
+
+    @Get(':name')
+    getSkillByName(@Param('name') name: string) {
+        return this.skillService.getByName(name);
     }
 
     @Get(':id')

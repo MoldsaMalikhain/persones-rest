@@ -19,14 +19,15 @@ export class SkillsService {
     }
 
     async getSkills() {
-        return this.skillRepository.find()
+        return this.skillRepository.find({})
     }
 
-    async getById(_id: number) {
-        return this.skillRepository.findOneOrFail({ where: { id: _id } })
+    async getByName(name: string): Promise<Skills> {
+        return this.skillRepository.findOneOrFail({ where: { name: name } })
     }
 
-
-
+    async getById(_id: number): Promise<Skills> {
+        return this.skillRepository.findOneOrFail({ where: { id: _id } });
+    }
 
 }
