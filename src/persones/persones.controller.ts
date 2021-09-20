@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { DeleteDateColumn } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import CreatePersonesDto from './create-persones.dto';
 import { PersonesService } from './persones.service';
 
@@ -13,19 +12,28 @@ export class PersonesController {
   postPersone(@Body() person: CreatePersonesDto) {
     return this.personesServis.insert(person)
   }
+  @Patch(':id')
+  update(@Body() dataToUpdate: CreatePersonesDto, @Param('id') _id: number) {
+    return this.personesServis.update(dataToUpdate, _id);
+  }
 
   @Get()
   getAll() {
     return this.personesServis.getAllPersones();
   }
 
-  @Get('skills')
-  getSkills(@Body(`persone_id`, ParseIntPipe) persone_id: number) {
+  @Get(':id')
+  getSkills(@Param(`persone_id`, ParseIntPipe) persone_id: number) {
     return this.personesServis.getSkillsOfPerson(persone_id);
   }
 
-  // @Delete(':id')
-  // deletePersone(@Param('id') persone_id: number) {
-  //   return this.personesServis.deletePersone(persone_id);
-  // }
+  @Get(':id')
+  getPersone(@Param('id') _id: number) {
+    return this.personesServis.getById(_id)
+  }
+
+  @Delete(':id')
+  deletePersone(@Param('id') _id: number) {
+    return this.personesServis.deletePersone(_id);
+  }
 }

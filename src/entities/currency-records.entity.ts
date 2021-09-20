@@ -9,14 +9,8 @@ export class CurrencyRecords {
     @PrimaryGeneratedColumn()
     id: number;
 
-    // @Column()
-    // company_id: number
-
     @Column()
     projectSallary: number;
-
-    // @Column()
-    // currency_id: number;
 
     @Column("float")
     bankRate: number;
@@ -38,5 +32,5 @@ export class CurrencyRecords {
 
     @ManyToOne(type => Companies, company => company.records)
     company: Companies;
-    currencyEntity: CurrencyRecords;
+    // currencyEntity: CurrencyRecords;
 }

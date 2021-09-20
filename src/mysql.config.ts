@@ -8,6 +8,6 @@ export default config = {
   username: 'root',
   password: 'Lthgfhjkm01',
   database: 'persones',
-  entities: ['dist/**/*.entity{.ts,.js}'],
+  entities: ['dist/**/*.entities{.ts,.js}'],
   synchronize: true,
 };

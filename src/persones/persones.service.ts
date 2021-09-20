@@ -9,15 +9,21 @@ import { Roles } from 'src/entities/roles.entity';
 import { Notes } from 'src/entities/notes.entity';
 import { Absences } from 'src/entities/absences.entity';
 import { Salaries } from 'src/entities/salaries.entity';
+import pushIn from 'src/pushIn';
 
-// async function pushIn(array, rep) {
-//     const arr:any[] = []
-//     for (let item = 0; item < array.length; item++) {
-//         const element = await rep.findOne(array[item])
+// /**
+//  * @param {Array} ids 
+//  * @param {Repository} rep 
+//  * @returns {Promise<Array>}
+//  */
+// async function pushIn(ids: Array<any>, rep: Repository<any>) {
+//     const arr: any[] = []
+//     for (let item = 0; item < ids.length; item++) {
+//         const element = await rep.findOne(ids[item])
 //         arr.push(element)
 //     }
 //     return arr
-// } 
+// }
 @Injectable()
 export class PersonesService {
 
@@ -58,62 +64,99 @@ export class PersonesService {
 
         personeEntity.roles = await this.roleRepository.findOne(roles);
 
-        personeEntity.skills = [];
-        personeEntity.notes = [];
-        personeEntity.absences = [];
-        personeEntity.salaries = [];
-        personeEntity.persones = [];
-        personeEntity.managers = [];
+        // personeEntity.skills = [];
+        // personeEntity.notes = [];
+        // personeEntity.absences = [];
+        // personeEntity.salaries = [];
+        // personeEntity.persones = [];
+        // personeEntity.managers = [];
 
-        for (let item = 0; item < skills.length; item++) {
-            const skill = await this.skillsRepository.findOneOrFail(skills[item])
-            personeEntity.skills.push(skill);
-        }
-        for (let item = 0; item < notes.length; item++) {
-            const note = await this.notesRepository.findOneOrFail(notes[item])
-            personeEntity.notes.push(note);
-        }
-        for (let item = 0; item < absences.length; item++) {
-            const absence = await this.absencesRepository.findOneOrFail(absences[item])
-            personeEntity.absences.push(absence);
-        }
-        for (let item = 0; item < salaries.length; item++) {
-            const salarie = await this.salariesRepository.findOneOrFail(salaries[item])
-            personeEntity.salaries.push(salarie);
-        }
-        for (let item = 0; item < persones.length; item++) {
-            const persone = await this.notesRepository.findOneOrFail(persones[item])
-            personeEntity.persones.push(persone);
-        }
-        for (let item = 0; item < managers.length; item++) {
-            const manager = await this.notesRepository.findOneOrFail(managers[item])
-            personeEntity.managers.push(manager);
-        }
+        personeEntity.skills = await pushIn(skills, this.skillsRepository);
+        personeEntity.notes = await pushIn(notes, this.notesRepository);
+        personeEntity.notes = await pushIn(managers, this.notesRepository);
+        personeEntity.absences = await pushIn(absences, this.absencesRepository);
+        personeEntity.salaries = await pushIn(salaries, this.salariesRepository);
+        personeEntity.persones = await pushIn(persones, this.personeRepository);
 
         await this.personeRepository.save(personeEntity);
         return personeEntity;
     }
 
-    // async updatePersone(id:number, data: CreatePersonesDto):Promise<Persones>{
-    //     await this.personeRepository.update({id}, data)
-    //     return  
-    // }
+    async update(personeDetails: CreatePersonesDto, _id: number): Promise<Persones> {
+
+        const personeEntity: Persones = await this.personeRepository.findOneOrFail(_id);
+        const {
+            firstName,
+            age,
+            nameOnProject,
+            startDate,
+            endDate,
+            englishLvl,
+            skills,
+            notes,
+            absences,
+            salaries,
+            persones,
+            managers,
+            roles
+        } = personeDetails;
+
+        personeEntity.firstName = firstName;
+        personeEntity.age = age;
+        personeEntity.nameOnProject = nameOnProject;
+        personeEntity.startDate = startDate;
+        personeEntity.endDate = endDate;
+        personeEntity.englishLvl = englishLvl;
+
+        personeEntity.roles = await this.roleRepository.findOne(roles);
+
+        // personeEntity.skills = [];
+        // personeEntity.notes = [];
+        // personeEntity.absences = [];
+        // personeEntity.salaries = [];
+        // personeEntity.persones = [];
+        // personeEntity.managers = [];
+
+        personeEntity.skills = await pushIn(skills, this.skillsRepository);
+        personeEntity.notes = await pushIn(notes, this.notesRepository);
+        personeEntity.notes = await pushIn(managers, this.notesRepository);
+        personeEntity.absences = await pushIn(absences, this.absencesRepository);
+        personeEntity.salaries = await pushIn(salaries, this.salariesRepository);
+        personeEntity.persones = await pushIn(persones, this.personeRepository);
+
+        await this.personeRepository.save(personeEntity);
+        return personeEntity;
+
+        // this.personeRepository.createQueryBuilder()
+        //     .update()
+        //     .set({
+        //         ...personeDetails as 
+        //     })
+        //     .where({ id: _id })
+        //     .execute();
+
+    }
 
     async getAllPersones(): Promise<Persones[]> {
         return await this.personeRepository.find();
     }
 
+    async getById(_id: number) {
+        return await this.personeRepository.findOneOrFail(_id);
+    }
+
     async getSkillsOfPerson(persone_id: number): Promise<Skills[]> {
         const persone: Persones = await this.personeRepository.findOneOrFail({
             where: { id: persone_id },
+            select: ['firstName'],
             relations: ['skills', 'roles']
         });
         return persone.skills
     }
 
-    async deletePersone(persone: Persones): Promise<Persones> {
-        // const personeToDelte = await this.personeRepository.findOne(persone_id);
-        return await this.personeRepository.remove(persone);
+    async deletePersone(_id: number): Promise<Persones> {
+        const personeToRemove = await this.personeRepository.findOneOrFail(_id)
+        return await this.personeRepository.remove(personeToRemove);
     }
 
 }

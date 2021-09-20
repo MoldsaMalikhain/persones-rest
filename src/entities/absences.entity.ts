@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ESPIPE } from "constants";
-import { Column, Entity, ManyToMany, ManyToOne, PersistedEntityNotFoundError, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Persones } from "./persones.entity";
 
 

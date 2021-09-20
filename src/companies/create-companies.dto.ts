@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 
-export default class PersonesDto {
+export default class CreateCompaniesDto {
     readonly name: string;
     readonly contacts: string;
     readonly createTime: number;

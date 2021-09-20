@@ -11,7 +11,7 @@ export class NotesService {
 
     constructor(
         @InjectRepository(Notes) private notesRepository: Repository<Notes>,
-        @InjectRepository(Repository) private personesRepository: Repository<Persones>
+        @InjectRepository(Persones) private personesRepository: Repository<Persones>
     ) { }
 
     async create(notesDetails: CreateNotesDto): Promise<Notes> {

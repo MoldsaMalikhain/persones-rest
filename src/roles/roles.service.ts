@@ -5,6 +5,7 @@ import { Persones } from 'src/entities/persones.entity';
 import { Roles } from 'src/entities/roles.entity';
 import { Repository } from 'typeorm';
 import CreateRolesDto from './create-roles.dto';
+import pushIn from 'src/pushIn';
 
 @Injectable()
 export class RolesService {
@@ -26,10 +27,7 @@ export class RolesService {
         roleEntity.name = name;
         roleEntity.persone = []
 
-        for (let item = 0; item < persones.length; item++) {
-            const role = await this.personesRepository.findOneOrFail(persones[item])
-            roleEntity.persone.push(role);
-        }
+        pushIn(persones, this.personesRepository);
 
         await this.roleRepository.save(roleEntity);
         return roleEntity;
