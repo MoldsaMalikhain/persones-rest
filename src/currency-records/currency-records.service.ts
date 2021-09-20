@@ -37,8 +37,17 @@ export class CurrencyRecordsService {
         currencyEntity.month = month;
         currencyEntity.operationDate = operationDate;
 
-        currencyEntity.company = await this.companiesRepository.findOneOrFail(company);
-        currencyEntity.currency = await this.currencyRepository.findOneOrFail(currency);
+        try {
+            currencyEntity.company = await this.companiesRepository.findOneOrFail(company);
+        } catch (err) {
+            currencyEntity.company = null
+        }
+        try {
+            currencyEntity.currency = await this.currencyRepository.findOneOrFail(currency);
+        } catch (err) {
+            currencyEntity.currency = null
+        }
+
 
         await this.currencyRecRepository.save(currencyEntity);
         return currencyEntity;

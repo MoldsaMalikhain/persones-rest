@@ -49,7 +49,13 @@ export class PersonesService {
         personeEntity.endDate = endDate;
         personeEntity.englishLvl = englishLvl;
 
-        personeEntity.roles = await this.roleRepository.findOne(roles);
+        try {
+            personeEntity.roles = await this.roleRepository.findOneOrFail(roles);
+
+        } catch (err) {
+            personeEntity.roles = null
+        }
+
 
         personeEntity.skills = await pushIn(skills, this.skillsRepository);
         personeEntity.notes = await pushIn(notes, this.notesRepository);
@@ -121,7 +127,7 @@ export class PersonesService {
     }
 
     async getAll(): Promise<Persones[]> {
-        return this.personeRepository.find({});
+        return this.personeRepository.find({ relations: ['skills', 'roles'] });
     }
 
     async getById(_id: number) {
@@ -131,15 +137,6 @@ export class PersonesService {
                 relations: ['skills', 'roles']
 
             });
-    }
-
-    async getSkillsOfPerson(persone_id: number): Promise<Skills[]> {
-        const persone: Persones = await this.personeRepository.findOneOrFail({
-            where: { id: persone_id },
-            select: ['firstName'],
-            relations: ['skills', 'roles']
-        });
-        return persone.skills
     }
 
     async deletePersone(_id: number): Promise<Persones> {

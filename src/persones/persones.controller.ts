@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import CreatePersonesDto from './create-persones.dto';
 import { PersonesService } from './persones.service';
 

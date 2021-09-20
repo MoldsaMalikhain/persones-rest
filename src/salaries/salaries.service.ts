@@ -30,8 +30,17 @@ export class SalariesService {
         salarieEntity.amount = amount;
         salarieEntity.startDate = startDate;
         salarieEntity.endDate = endDate;
-        salarieEntity.currency = await this.currenciesRepository.findOneOrFail(currensy_id);
-        salarieEntity.persone = await this.personesRepository.findOneOrFail(person_id);
+
+        try {
+            salarieEntity.currency = await this.currenciesRepository.findOneOrFail(currensy_id);
+        } catch (err) {
+            salarieEntity.currency = null;
+        }
+        try {
+            salarieEntity.persone = await this.personesRepository.findOneOrFail(person_id);
+        } catch (err) {
+            salarieEntity.persone = null;
+        }
 
         await this.salariesRepository.save(salarieEntity);
         return salarieEntity;

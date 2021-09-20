@@ -35,6 +35,7 @@ export class CurrenciesService {
         currencyEntity.salaries = await pushIn(salaries, this.salariesRepository);
         currencyEntity.records = await pushIn(records, this.currencyRecRepository);
 
+
         await this.currencyRepository.save(currencyEntity);
 
         return currencyEntity;

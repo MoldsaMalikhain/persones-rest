@@ -28,7 +28,13 @@ export class AbsencesService {
         absenceEntity.type = type;
         absenceEntity.startDate = startDate;
         absenceEntity.endDate = endDate;
-        absenceEntity.persone = await this.personeRepository.findOneOrFail(persone)
+
+        try {
+            absenceEntity.persone = await this.personeRepository.findOneOrFail(persone)
+
+        } catch (err) {
+            absenceEntity.persone = null
+        }
 
         await this.absenceRepository.save(absenceEntity);
         return absenceEntity;

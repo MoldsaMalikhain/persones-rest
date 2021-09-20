@@ -26,8 +26,19 @@ export class NotesService {
 
         notesEntity.name = name;
         notesEntity.date = date;
-        notesEntity.user_m = await this.personesRepository.findOneOrFail(user_m)
-        notesEntity.user_p = await this.personesRepository.findOneOrFail(user_p)
+
+        try {
+            notesEntity.user_m = await this.personesRepository.findOneOrFail(user_m)
+        }
+        catch (err) {
+            notesEntity.user_m = null
+        }
+
+        try {
+            notesEntity.user_p = await this.personesRepository.findOneOrFail(user_p)
+        } catch (err) {
+            notesEntity.user_p = null
+        }
 
         await this.notesRepository.save(notesEntity)
         return notesEntity;
