@@ -40,7 +40,7 @@ export class CurrenciesService {
         return currencyEntity;
     }
 
-    async getAll() {
+    async getAll(): Promise<Currencies[]> {
         return this.currencyRepository.find()
     }
 

@@ -44,7 +44,7 @@ export class CurrencyRecordsService {
         return currencyEntity;
     }
 
-    async getAll() {
+    async getAll(): Promise<CurrencyRecords[]> {
         return this.currencyRecRepository.find();
     }
 

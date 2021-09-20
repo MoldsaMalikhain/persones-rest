@@ -33,7 +33,7 @@ export class RolesService {
         return roleEntity;
     }
 
-    async getAll() {
+    async getAll(): Promise<Roles[]> {
         return this.roleRepository.find()
     }
 

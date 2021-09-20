@@ -35,7 +35,7 @@ export class CompaniesService {
         return companyEntity;
     }
 
-    async getAll() {
+    async getAll(): Promise<Companies[]> {
         return this.companyRepository.find();
     }
 

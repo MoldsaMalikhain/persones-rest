@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put } from '@nestjs/common';
 import CreatePersonesDto from './create-persones.dto';
 import { PersonesService } from './persones.service';
 
@@ -12,7 +12,7 @@ export class PersonesController {
   postPersone(@Body() person: CreatePersonesDto) {
     return this.personesServis.insert(person)
   }
-  @Patch(':id')
+  @Put(':id')
   update(@Body() dataToUpdate: CreatePersonesDto, @Param('id') _id: number) {
     return this.personesServis.update(dataToUpdate, _id);
   }

@@ -34,7 +34,7 @@ export class AbsencesService {
         return absenceEntity;
     }
 
-    async getAll() {
+    async getAll(): Promise<Absences[]> {
         return this.absenceRepository.find()
     }
 

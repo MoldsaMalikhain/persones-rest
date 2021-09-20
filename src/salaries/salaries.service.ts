@@ -37,7 +37,7 @@ export class SalariesService {
         return salarieEntity;
     }
 
-    async getAll() {
+    async getAll(): Promise<Salaries[]> {
         return this.salariesRepository.find();
     }
 

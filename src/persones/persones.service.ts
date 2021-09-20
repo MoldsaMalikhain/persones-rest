@@ -129,11 +129,13 @@ export class PersonesService {
 
         // this.personeRepository.createQueryBuilder()
         //     .update()
-        //     .set({
-        //         ...personeDetails as 
-        //     })
+        //     .set(
+        //         personeDetails
+        //     )
         //     .where({ id: _id })
         //     .execute();
+
+        //     return
 
     }
 

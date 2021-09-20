@@ -18,7 +18,7 @@ export class SkillsService {
         return skillEntity;
     }
 
-    async getSkills() {
+    async getSkills(): Promise<Skills[]> {
         return this.skillRepository.find({})
     }
 

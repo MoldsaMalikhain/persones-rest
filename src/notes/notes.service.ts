@@ -33,7 +33,7 @@ export class NotesService {
         return notesEntity;
     }
 
-    async getAll() {
+    async getAll(): Promise<Notes[]> {
         return this.notesRepository.find()
     }
 
