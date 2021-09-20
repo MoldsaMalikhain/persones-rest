@@ -1,29 +1,15 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { Persones } from 'src/entities/persones.entity';
+import { Persones } from 'src/entity/persones.entity';
 import CreatePersonesDto from './create-persones.dto';
 import { Repository } from 'typeorm';
-import { Skills } from 'src/entities/skills.entity';
+import { Skills } from 'src/entity/skills.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Roles } from 'src/entities/roles.entity';
-import { Notes } from 'src/entities/notes.entity';
-import { Absences } from 'src/entities/absences.entity';
-import { Salaries } from 'src/entities/salaries.entity';
+import { Roles } from 'src/entity/roles.entity';
+import { Notes } from 'src/entity/notes.entity';
+import { Absences } from 'src/entity/absences.entity';
+import { Salaries } from 'src/entity/salaries.entity';
 import pushIn from 'src/pushIn';
-
-// /**
-//  * @param {Array} ids 
-//  * @param {Repository} rep 
-//  * @returns {Promise<Array>}
-//  */
-// async function pushIn(ids: Array<any>, rep: Repository<any>) {
-//     const arr: any[] = []
-//     for (let item = 0; item < ids.length; item++) {
-//         const element = await rep.findOne(ids[item])
-//         arr.push(element)
-//     }
-//     return arr
-// }
 @Injectable()
 export class PersonesService {
 
@@ -37,6 +23,7 @@ export class PersonesService {
     ) { }
 
     async insert(personeDetails: CreatePersonesDto): Promise<Persones> {
+
         const personeEntity: Persones = this.personeRepository.create();
 
         const {
@@ -64,19 +51,13 @@ export class PersonesService {
 
         personeEntity.roles = await this.roleRepository.findOne(roles);
 
-        // personeEntity.skills = [];
-        // personeEntity.notes = [];
-        // personeEntity.absences = [];
-        // personeEntity.salaries = [];
-        // personeEntity.persones = [];
-        // personeEntity.managers = [];
-
         personeEntity.skills = await pushIn(skills, this.skillsRepository);
         personeEntity.notes = await pushIn(notes, this.notesRepository);
         personeEntity.notes = await pushIn(managers, this.notesRepository);
         personeEntity.absences = await pushIn(absences, this.absencesRepository);
         personeEntity.salaries = await pushIn(salaries, this.salariesRepository);
         personeEntity.persones = await pushIn(persones, this.personeRepository);
+
 
         await this.personeRepository.save(personeEntity);
         return personeEntity;
@@ -129,9 +110,9 @@ export class PersonesService {
 
         // this.personeRepository.createQueryBuilder()
         //     .update()
-        //     .set(
-        //         personeDetails
-        //     )
+        //     .set({
+        //         ...personeDetails
+        //     })
         //     .where({ id: _id })
         //     .execute();
 
@@ -139,12 +120,17 @@ export class PersonesService {
 
     }
 
-    async getAllPersones(): Promise<Persones[]> {
-        return await this.personeRepository.find();
+    async getAll(): Promise<Persones[]> {
+        return this.personeRepository.find({});
     }
 
     async getById(_id: number) {
-        return await this.personeRepository.findOneOrFail(_id);
+        return this.personeRepository.findOneOrFail(
+            {
+                where: { id: _id },
+                relations: ['skills', 'roles']
+
+            });
     }
 
     async getSkillsOfPerson(persone_id: number): Promise<Skills[]> {

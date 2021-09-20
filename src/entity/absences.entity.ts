@@ -18,9 +18,6 @@ export class Absences {
     @Column()
     type: number;
 
-    // @Column()
-    // persone_id: number;
-
     @ManyToOne(type => Persones, persone => persone.absences)
     persone: Persones;
 

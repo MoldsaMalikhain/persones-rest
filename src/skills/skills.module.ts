@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
-import { Skills } from 'src/entities/skills.entity';
+import { Skills } from 'src/entity/skills.entity';
 import { SkillsController } from './skills.controller';
 import { SkillsService } from './skills.service';
 

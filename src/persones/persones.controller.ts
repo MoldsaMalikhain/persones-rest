@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import CreatePersonesDto from './create-persones.dto';
 import { PersonesService } from './persones.service';
 
@@ -8,9 +8,9 @@ export class PersonesController {
 
   constructor(private readonly personesServis: PersonesService) { }
 
-  @Post('post')
-  postPersone(@Body() person: CreatePersonesDto) {
-    return this.personesServis.insert(person)
+  @Post()
+  postPersone(@Body() personDto: CreatePersonesDto) {
+    return this.personesServis.insert(personDto)
   }
   @Put(':id')
   update(@Body() dataToUpdate: CreatePersonesDto, @Param('id') _id: number) {
@@ -19,12 +19,7 @@ export class PersonesController {
 
   @Get()
   getAll() {
-    return this.personesServis.getAllPersones();
-  }
-
-  @Get(':id')
-  getSkills(@Param(`persone_id`, ParseIntPipe) persone_id: number) {
-    return this.personesServis.getSkillsOfPerson(persone_id);
+    return this.personesServis.getAll();
   }
 
   @Get(':id')

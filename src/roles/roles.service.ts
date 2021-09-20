@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Persones } from 'src/entities/persones.entity';
-import { Roles } from 'src/entities/roles.entity';
+import { Persones } from 'src/entity/persones.entity';
+import { Roles } from 'src/entity/roles.entity';
 import { Repository } from 'typeorm';
 import CreateRolesDto from './create-roles.dto';
 import pushIn from 'src/pushIn';

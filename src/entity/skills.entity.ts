@@ -5,12 +5,15 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
-export class Skills{
+export class Skills {
 
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({length: 255})
+    @Column({
+        length: 255,
+        default: "test"
+    })
     name: string;
 
 }

@@ -18,7 +18,7 @@ export class SkillsController {
         return this.skillService.getSkills()
     }
 
-    @Get(':name')
+    @Get('name/:name')
     getSkillByName(@Param('name') name: string) {
         return this.skillService.getByName(name);
     }

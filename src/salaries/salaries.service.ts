@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Currencies } from 'src/entities/currencies.entity';
-import { Persones } from 'src/entities/persones.entity';
-import { Salaries } from 'src/entities/salaries.entity';
+import { Currencies } from 'src/entity/currencies.entity';
+import { Persones } from 'src/entity/persones.entity';
+import { Salaries } from 'src/entity/salaries.entity';
 import { Repository } from 'typeorm';
 import CreateSalariesDto from './create-salaries.dto';
 

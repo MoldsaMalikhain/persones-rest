@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Companies } from 'src/entities/companies.entity';
-import { Currencies } from 'src/entities/currencies.entity';
-import { CurrencyRecords } from 'src/entities/currency-records.entity';
+import { Companies } from 'src/entity/companies.entity';
+import { Currencies } from 'src/entity/currencies.entity';
+import { CurrencyRecords } from 'src/entity/currency-records.entity';
 import { Repository } from 'typeorm';
 import CreateCurrencyRecordDto from './create-currency-records.dto';
 

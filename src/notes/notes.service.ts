@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Notes } from 'src/entities/notes.entity';
-import { Persones } from 'src/entities/persones.entity';
+import { Notes } from 'src/entity/notes.entity';
+import { Persones } from 'src/entity/persones.entity';
 import { Repository } from 'typeorm';
 import CreateNotesDto from './create-notes.dto';
 

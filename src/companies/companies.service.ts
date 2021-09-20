@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Companies } from 'src/entities/companies.entity';
-import { CurrencyRecords } from 'src/entities/currency-records.entity';
+import { Companies } from 'src/entity/companies.entity';
+import { CurrencyRecords } from 'src/entity/currency-records.entity';
 import { Repository } from 'typeorm';
 import CreateCompaniesDto from './create-companies.dto';
 import pushIn from 'src/pushIn';
@@ -21,13 +21,14 @@ export class CompaniesService {
         const {
             name,
             contacts,
-            createTime,
             records
         } = companiDetails;
 
+        const date = new Date();
+
         companyEntity.name = name;
-        companyEntity.contacts = contacts,
-            companyEntity.createTime;
+        companyEntity.contacts = contacts;
+        companyEntity.createTime = date.getDate();
 
         companyEntity.records = await pushIn(records, this.currencyRecRepository);
 

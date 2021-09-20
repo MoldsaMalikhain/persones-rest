@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Skills } from 'src/entities/skills.entity';
+import { Skills } from 'src/entity/skills.entity';
 import { Repository } from 'typeorm';
 import CreateSkillsDto from './create-skills.dto';
 
@@ -15,6 +15,7 @@ export class SkillsService {
         const { name } = skillsDetails;
         skillEntity.name = name;
         await this.skillRepository.save(skillEntity);
+        console.log(skillEntity);
         return skillEntity;
     }
 
@@ -22,8 +23,8 @@ export class SkillsService {
         return this.skillRepository.find({})
     }
 
-    async getByName(name: string): Promise<Skills> {
-        return this.skillRepository.findOneOrFail({ where: { name: name } })
+    async getByName(name: string): Promise<Skills[]> {
+        return this.skillRepository.find({ where: { name: name } })
     }
 
     async getById(_id: number): Promise<Skills> {

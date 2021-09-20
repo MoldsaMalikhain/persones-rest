@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Absences } from 'src/entities/absences.entity';
-import { Persones } from 'src/entities/persones.entity';
+import { Absences } from 'src/entity/absences.entity';
+import { Persones } from 'src/entity/persones.entity';
 import { Repository } from 'typeorm';
 import CreateAbsencesDto from './create-absences.dto';
 
