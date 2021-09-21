@@ -17,4 +17,3 @@ export default class UpdatePersonesDto {
     readonly managers: number[];
     readonly roles: number;
 }
-

@@ -170,6 +170,4 @@ export class PersonesService {
         };
         return { persone: personeRo };
     }
-
-
 }
