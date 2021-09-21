@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AbsencesService } from './absences.service';
-import CreateAbsencesDto from './create-absences.dto';
+import CreateAbsencesDto from '../dto/create/create-absences.dto';
 
 @Controller('absences')
 export class AbsencesController {

@@ -1,15 +1,17 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Persones } from 'src/entity/persones.entity';
-import CreatePersonesDto from './create-persones.dto';
-import { Repository } from 'typeorm';
-import { Skills } from 'src/entity/skills.entity';
+import CreatePersonesDto from '../dto/create/create-persones.dto';
+import { getRepository, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import pushIn from 'src/pushIn';
+import { PersoneRO } from './persone.interface';
+import UpdatePersonesDto from '../dto/update/update-persone.dto';
 import { Roles } from 'src/entity/roles.entity';
+import { Skills } from 'src/entity/skills.entity';
 import { Notes } from 'src/entity/notes.entity';
 import { Absences } from 'src/entity/absences.entity';
 import { Salaries } from 'src/entity/salaries.entity';
-import pushIn from 'src/pushIn';
 @Injectable()
 export class PersonesService {
 
@@ -22,9 +24,7 @@ export class PersonesService {
         @InjectRepository(Salaries) private salariesRepository: Repository<Salaries>,
     ) { }
 
-    async insert(personeDetails: CreatePersonesDto): Promise<Persones> {
-
-        const personeEntity: Persones = this.personeRepository.create();
+    async create(personeDetails: CreatePersonesDto): Promise<PersoneRO> {
 
         const {
             firstName,
@@ -32,53 +32,56 @@ export class PersonesService {
             nameOnProject,
             startDate,
             endDate,
-            englishLvl,
-            skills,
-            notes,
-            absences,
-            salaries,
-            persones,
-            managers,
-            roles
+            englishLvl
         } = personeDetails;
 
-        personeEntity.firstName = firstName;
-        personeEntity.age = age;
-        personeEntity.nameOnProject = nameOnProject;
-        personeEntity.startDate = startDate;
-        personeEntity.endDate = endDate;
-        personeEntity.englishLvl = englishLvl;
+        const qb = await getRepository(Persones)
+            .createQueryBuilder('persone')
+            .where('persone.firstName = :firstName', { firstName })
+            .orWhere('persone.nameOnProject = :nameOnProject', { nameOnProject });
+        const pr = await qb.getOne();
 
-        try {
-            personeEntity.roles = await this.roleRepository.findOneOrFail(roles);
-
-        } catch (err) {
-            personeEntity.roles = null
+        if (pr) {
+            const err = { firstName: 'Name and Name On Project must be unique' };
+            throw new HttpException({ message: 'Input data validation faild', err }, HttpStatus.BAD_REQUEST);
         }
 
+        const newPersone = new Persones();
+        newPersone.nameOnProject = nameOnProject;
+        newPersone.englishLvl = englishLvl;
+        newPersone.firstName = firstName;
+        newPersone.startDate = startDate;
+        newPersone.endDate = endDate;
+        newPersone.age = age;
 
-        personeEntity.skills = await pushIn(skills, this.skillsRepository);
-        personeEntity.notes = await pushIn(notes, this.notesRepository);
-        personeEntity.notes = await pushIn(managers, this.notesRepository);
-        personeEntity.absences = await pushIn(absences, this.absencesRepository);
-        personeEntity.salaries = await pushIn(salaries, this.salariesRepository);
-        personeEntity.persones = await pushIn(persones, this.personeRepository);
+        newPersone.skills = [];
+        newPersone.notes = [];
+        newPersone.absences = [];
+        newPersone.salaries = [];
+        newPersone.persones = [];
+        newPersone.managers = [];
 
+        newPersone.roles = null;
 
-        await this.personeRepository.save(personeEntity);
-        return personeEntity;
+        try {
+            const savePersone = await this.personeRepository.save(newPersone)
+            return this.buildPersoneRo(savePersone)
+            // return savePersone;
+        } catch (error) {
+            throw new HttpException({ message: 'Data save faild', error }, HttpStatus.BAD_REQUEST);
+        }
     }
 
-    async update(personeDetails: CreatePersonesDto, _id: number): Promise<Persones> {
+    async createNote() {
+        return;
+    }
 
-        const personeEntity: Persones = await this.personeRepository.findOneOrFail(_id);
+    async update(personeDetails: UpdatePersonesDto, _id: number): Promise<Persones> {
+
+        const toUpdate = await this.personeRepository.findOneOrFail(_id)
+        if (!toUpdate) return null;
+
         const {
-            firstName,
-            age,
-            nameOnProject,
-            startDate,
-            endDate,
-            englishLvl,
             skills,
             notes,
             absences,
@@ -86,44 +89,20 @@ export class PersonesService {
             persones,
             managers,
             roles
-        } = personeDetails;
+        } = personeDetails
 
-        personeEntity.firstName = firstName;
-        personeEntity.age = age;
-        personeEntity.nameOnProject = nameOnProject;
-        personeEntity.startDate = startDate;
-        personeEntity.endDate = endDate;
-        personeEntity.englishLvl = englishLvl;
+        toUpdate.roles = null;
+        if (roles) toUpdate.roles = await this.roleRepository.findOneOrFail(roles);
 
-        personeEntity.roles = await this.roleRepository.findOne(roles);
+        toUpdate.skills = await pushIn(skills, this.skillsRepository);
+        toUpdate.notes = await pushIn(notes, this.notesRepository);
+        toUpdate.notes = await pushIn(managers, this.notesRepository);
+        toUpdate.absences = await pushIn(absences, this.absencesRepository);
+        toUpdate.salaries = await pushIn(salaries, this.salariesRepository);
+        toUpdate.persones = await pushIn(persones, this.personeRepository);
 
-        // personeEntity.skills = [];
-        // personeEntity.notes = [];
-        // personeEntity.absences = [];
-        // personeEntity.salaries = [];
-        // personeEntity.persones = [];
-        // personeEntity.managers = [];
-
-        personeEntity.skills = await pushIn(skills, this.skillsRepository);
-        personeEntity.notes = await pushIn(notes, this.notesRepository);
-        personeEntity.notes = await pushIn(managers, this.notesRepository);
-        personeEntity.absences = await pushIn(absences, this.absencesRepository);
-        personeEntity.salaries = await pushIn(salaries, this.salariesRepository);
-        personeEntity.persones = await pushIn(persones, this.personeRepository);
-
-        await this.personeRepository.save(personeEntity);
-        return personeEntity;
-
-        // this.personeRepository.createQueryBuilder()
-        //     .update()
-        //     .set({
-        //         ...personeDetails
-        //     })
-        //     .where({ id: _id })
-        //     .execute();
-
-        //     return
-
+        const updated = Object.assign(personeDetails, toUpdate);
+        return await this.personeRepository.save(updated);
     }
 
     async getAll(): Promise<Persones[]> {
@@ -131,17 +110,66 @@ export class PersonesService {
     }
 
     async getById(_id: number) {
-        return this.personeRepository.findOneOrFail(
-            {
-                where: { id: _id },
-                relations: ['skills', 'roles']
 
-            });
+        const persone = await this.personeRepository.findOneOrFail({
+            where: { id: _id },
+            relations: ['skills', 'roles']
+        })
+
+        if (!persone) return null;
+
+        return persone;
+    }
+
+    async getByProject(_id: number): Promise<Persones[]> {
+
+        const byProject = await this.personeRepository.find({ where: { nameOnProject: _id } })
+        if (!byProject) return null;
+
+        return byProject;
+    }
+
+    async getBySkill(_id: number): Promise<Persones[]> {
+
+        const bySkill = await this.personeRepository.find({ where: { skills: _id } })
+        if (!bySkill) return null
+
+        return bySkill;
+    }
+
+    async getByManager(manager: number): Promise<Persones[]> {
+
+        const byManager = await this.personeRepository.find({ where: { managers: manager } })
+        if (!byManager) return null;
+
+        return byManager;
     }
 
     async deletePersone(_id: number): Promise<Persones> {
         const personeToRemove = await this.personeRepository.findOneOrFail(_id)
+        if (!personeToRemove) return null
+
         return await this.personeRepository.remove(personeToRemove);
     }
+
+    buildPersoneRo(persone) {
+        const personeRo = {
+            id: persone.id,
+            firstName: persone.firtName,
+            age: persone.age,
+            nameOnProject: persone.nameOnProject,
+            startDate: persone.startDate,
+            endDate: persone.endDate,
+            englishLvl: persone.englishLvl,
+            skills: persone.skills,
+            notes: persone.notes,
+            absences: persone.absences,
+            salaries: persone.salaries,
+            managers: persone.menagers,
+            roles: persone.roles
+        };
+        return { persone: personeRo };
+    }
+
 
 }

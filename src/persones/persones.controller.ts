@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import CreatePersonesDto from './create-persones.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import CreatePersonesDto from '../dto/create/create-persones.dto';
 import { PersonesService } from './persones.service';
+import UpdatePersonesDto from '../dto/update/update-persone.dto';
 
 @Controller('persones')
 export class PersonesController {
@@ -10,10 +11,10 @@ export class PersonesController {
 
   @Post()
   postPersone(@Body() personDto: CreatePersonesDto) {
-    return this.personesServis.insert(personDto)
+    return this.personesServis.create(personDto)
   }
-  @Put(':id')
-  update(@Body() dataToUpdate: CreatePersonesDto, @Param('id') _id: number) {
+  @Patch(':id')
+  update(@Body() dataToUpdate: UpdatePersonesDto, @Param('id') _id: number) {
     return this.personesServis.update(dataToUpdate, _id);
   }
 
@@ -25,6 +26,21 @@ export class PersonesController {
   @Get(':id')
   getPersone(@Param('id') _id: number) {
     return this.personesServis.getById(_id)
+  }
+
+  @Get('project/:id')
+  getByProject(@Param('id') _id: number) {
+    return this.personesServis.getByProject(_id);
+  }
+
+  @Get('skill/:id')
+  getBySkill(@Param('id') _id: number) {
+    return this.personesServis.getBySkill(_id);
+  }
+
+  @Get('managers/:id')
+  getByManager(@Param('id') _id: number) {
+    return this.personesServis.getByManager(_id)
   }
 
   @Delete(':id')

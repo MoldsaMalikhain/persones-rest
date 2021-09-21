@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import CreateCurrenciesDto from './create-currencies.dto';
+import CreateCurrenciesDto from '../dto/create/create-currencies.dto';
 import { CurrenciesService } from './currencies.service';
 
 @Controller('currencies')

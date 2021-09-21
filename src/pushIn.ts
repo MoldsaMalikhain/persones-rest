@@ -9,6 +9,7 @@ import { Repository } from "typeorm/repository/Repository"
  * @param {Repository} rep 
  * @returns {Promise<Array>}
  */
+
 async function pushIn(ids: Array<any>, rep: Repository<any>) {
     const arr: any[] = []
     try {
@@ -20,7 +21,6 @@ async function pushIn(ids: Array<any>, rep: Repository<any>) {
 
     } catch (error) {
         return arr
-        throw new Error(error)
     }
 
 }

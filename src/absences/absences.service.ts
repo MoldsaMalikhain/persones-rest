@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Absences } from 'src/entity/absences.entity';
 import { Persones } from 'src/entity/persones.entity';
 import { Repository } from 'typeorm';
-import CreateAbsencesDto from './create-absences.dto';
+import CreateAbsencesDto from '../dto/create/create-absences.dto';
 
 @Injectable()
 export class AbsencesService {

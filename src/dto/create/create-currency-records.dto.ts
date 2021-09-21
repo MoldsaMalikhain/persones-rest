@@ -8,7 +8,6 @@ export default class CreateCurrencyRecordDto {
     readonly net: number;
     readonly month: number;
     readonly operationDate: number;
-    readonly currency: number;
-    readonly company: number;
-
+    // readonly currency: number;
+    // readonly company: number;
 }

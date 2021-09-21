@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import UpdateSalariesDto from 'src/dto/update/update-salaries.dto';
 import { Currencies } from 'src/entity/currencies.entity';
 import { Persones } from 'src/entity/persones.entity';
 import { Salaries } from 'src/entity/salaries.entity';
 import { Repository } from 'typeorm';
-import CreateSalariesDto from './create-salaries.dto';
+import CreateSalariesDto from '../dto/create/create-salaries.dto';
 
 @Injectable()
 export class SalariesService {
@@ -23,35 +24,60 @@ export class SalariesService {
             amount,
             startDate,
             endDate,
-            person_id,
-            currensy_id
         } = salariesDetails
 
         salarieEntity.amount = amount;
         salarieEntity.startDate = startDate;
         salarieEntity.endDate = endDate;
 
-        try {
-            salarieEntity.currency = await this.currenciesRepository.findOneOrFail(currensy_id);
-        } catch (err) {
-            salarieEntity.currency = null;
-        }
-        try {
-            salarieEntity.persone = await this.personesRepository.findOneOrFail(person_id);
-        } catch (err) {
-            salarieEntity.persone = null;
-        }
-
         await this.salariesRepository.save(salarieEntity);
         return salarieEntity;
     }
 
+    async update(_id: number, salariesDetails: UpdateSalariesDto): Promise<Salaries> {
+
+        const {
+            amount,
+            startDate,
+            endDate,
+            currensy,
+            person
+        } = salariesDetails;
+
+        const toUpdate = new Salaries();
+
+        toUpdate.amount = amount;
+        toUpdate.startDate = startDate;
+        toUpdate.endDate = endDate;
+
+        toUpdate.persone = null;
+        toUpdate.currency = null;
+        if (currensy) toUpdate.currency = await this.currenciesRepository.findOneOrFail(currensy)
+        if (person) toUpdate.persone = await this.personesRepository.findOneOrFail(person)
+
+        const updated = Object.assign(salariesDetails, toUpdate)
+        return await this.salariesRepository.save(updated);
+    }
+
     async getAll(): Promise<Salaries[]> {
-        return this.salariesRepository.find();
+        const getAll = await this.salariesRepository.find();
+        if (!getAll) return null;
+
+        return getAll;
     }
 
     async getById(_id: number): Promise<Salaries> {
-        return this.salariesRepository.findOneOrFail({ where: { id: _id } })
+        const getID = await this.salariesRepository.findOneOrFail({ where: { id: _id } })
+        if (!getID) return null
+
+        return getID;
+    }
+
+    async delete(_id: number): Promise<Salaries> {
+        const toRemove = await this.salariesRepository.findOneOrFail(_id)
+        if (!toRemove) return null
+
+        return toRemove;
     }
 
 }

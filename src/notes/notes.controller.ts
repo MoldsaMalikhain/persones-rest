@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import CreateNotesDto from './create-notes.dto';
+import CreateNotesDto from '../dto/create/create-notes.dto';
 import { NotesService } from './notes.service';
 
 @Controller('notes')

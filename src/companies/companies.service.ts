@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Companies } from 'src/entity/companies.entity';
 import { CurrencyRecords } from 'src/entity/currency-records.entity';
 import { Repository } from 'typeorm';
-import CreateCompaniesDto from './create-companies.dto';
+import CreateCompaniesDto from '../dto/create/create-companies.dto';
 import pushIn from 'src/pushIn';
 @Injectable()
 export class CompaniesService {

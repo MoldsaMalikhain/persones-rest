@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import CreateSkillsDto from './create-skills.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import UpdateSkillsDto from 'src/dto/update/update-skill.dto';
+import CreateSkillsDto from '../dto/create/create-skills.dto';
 import { SkillsService } from './skills.service';
 
 @Controller('skills')
@@ -11,6 +12,11 @@ export class SkillsController {
     @Post()
     insert(@Body() createSkillDto: CreateSkillsDto) {
         return this.skillService.createSkill(createSkillDto)
+    }
+
+    @Patch(':id')
+    update(@Param('id') _id: number, dto: UpdateSkillsDto) {
+        return this.skillService.update(_id, dto)
     }
 
     @Get()
@@ -26,6 +32,11 @@ export class SkillsController {
     @Get(':id')
     getSkillById(@Param('id') _id: number) {
         return this.skillService.getById(_id);
+    }
+
+    @Delete(':id')
+    delete(@Param('id') _id: number) {
+        return this.skillService.delete(_id)
     }
 
 }

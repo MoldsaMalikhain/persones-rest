@@ -5,7 +5,7 @@ import { Currencies } from 'src/entity/currencies.entity';
 import { CurrencyRecords } from 'src/entity/currency-records.entity';
 import { Salaries } from 'src/entity/salaries.entity';
 import { Repository } from 'typeorm';
-import CreateCurrenciesDto from './create-currencies.dto';
+import CreateCurrenciesDto from '../dto/create/create-currencies.dto';
 import pushIn from 'src/pushIn';
 @Injectable()
 export class CurrenciesService {

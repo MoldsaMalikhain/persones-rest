@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Notes } from 'src/entity/notes.entity';
 import { Persones } from 'src/entity/persones.entity';
 import { Repository } from 'typeorm';
-import CreateNotesDto from './create-notes.dto';
+import CreateNotesDto from '../dto/create/create-notes.dto';
 
 @Injectable()
 export class NotesService {

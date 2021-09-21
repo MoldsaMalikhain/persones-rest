@@ -5,7 +5,7 @@ import { Companies } from 'src/entity/companies.entity';
 import { Currencies } from 'src/entity/currencies.entity';
 import { CurrencyRecords } from 'src/entity/currency-records.entity';
 import { Repository } from 'typeorm';
-import CreateCurrencyRecordDto from './create-currency-records.dto';
+import CreateCurrencyRecordDto from '../dto/create/create-currency-records.dto';
 
 @Injectable()
 export class CurrencyRecordsService {
@@ -18,40 +18,45 @@ export class CurrencyRecordsService {
 
     async create(currencyRecDetails: CreateCurrencyRecordDto): Promise<CurrencyRecords> {
 
-        const currencyEntity: CurrencyRecords = this.currencyRecRepository.create();
-        const {
-            projectSallary,
-            bankRate,
-            taxRate,
-            net,
-            month,
-            operationDate,
-            currency,
-            company
-        } = currencyRecDetails
-
-        currencyEntity.projectSallary = projectSallary;
-        currencyEntity.bankRate = bankRate;
-        currencyEntity.taxRate = taxRate;
-        currencyEntity.net = net;
-        currencyEntity.month = month;
-        currencyEntity.operationDate = operationDate;
-
-        try {
-            currencyEntity.company = await this.companiesRepository.findOneOrFail(company);
-        } catch (err) {
-            currencyEntity.company = null
-        }
-        try {
-            currencyEntity.currency = await this.currencyRepository.findOneOrFail(currency);
-        } catch (err) {
-            currencyEntity.currency = null
-        }
-
-
-        await this.currencyRecRepository.save(currencyEntity);
-        return currencyEntity;
+        return
     }
+
+    // async create(currencyRecDetails: CreateCurrencyRecordDto): Promise<CurrencyRecords> {
+
+    //     const currencyEntity: CurrencyRecords = this.currencyRecRepository.create();
+    //     const {
+    //         projectSallary,
+    //         bankRate,
+    //         taxRate,
+    //         net,
+    //         month,
+    //         operationDate,
+    //         currency,
+    //         company
+    //     } = currencyRecDetails
+
+    //     currencyEntity.projectSallary = projectSallary;
+    //     currencyEntity.bankRate = bankRate;
+    //     currencyEntity.taxRate = taxRate;
+    //     currencyEntity.net = net;
+    //     currencyEntity.month = month;
+    //     currencyEntity.operationDate = operationDate;
+
+    //     try {
+    //         currencyEntity.company = await this.companiesRepository.findOneOrFail(company);
+    //     } catch (err) {
+    //         currencyEntity.company = null
+    //     }
+    //     try {
+    //         currencyEntity.currency = await this.currencyRepository.findOneOrFail(currency);
+    //     } catch (err) {
+    //         currencyEntity.currency = null
+    //     }
+
+
+    //     await this.currencyRecRepository.save(currencyEntity);
+    //     return currencyEntity;
+    // }
 
     async getAll(): Promise<CurrencyRecords[]> {
         return this.currencyRecRepository.find();

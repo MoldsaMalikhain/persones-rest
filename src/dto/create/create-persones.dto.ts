@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 
-
 export default class CreatePersonesDto {
     readonly firstName: string;
     readonly age: string;
@@ -8,11 +7,5 @@ export default class CreatePersonesDto {
     readonly startDate: number;
     readonly endDate: number;
     readonly englishLvl: number;
-    readonly skills: number[];
-    readonly notes: number[];
-    readonly absences: number[];
-    readonly salaries: number[];
-    readonly persones: number[];
-    readonly managers: number[];
-    readonly roles: number;
 }
+

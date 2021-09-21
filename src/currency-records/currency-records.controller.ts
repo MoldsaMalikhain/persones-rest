@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import CreateCurrencyRecordDto from './create-currency-records.dto';
+import CreateCurrencyRecordDto from '../dto/create/create-currency-records.dto';
 import { CurrencyRecordsService } from './currency-records.service';
 
 @Controller('currency-records')
@@ -10,7 +10,7 @@ export class CurrencyRecordsController {
 
     @Post()
     create(@Body() currencyRecDto: CreateCurrencyRecordDto) {
-        return
+        return this.currencyRecordService.create(currencyRecDto);
     }
 
     @Get()

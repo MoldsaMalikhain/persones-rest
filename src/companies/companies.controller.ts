@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
-import CreateCompaniesDto from './create-companies.dto';
+import CreateCompaniesDto from '../dto/create/create-companies.dto';
 
 @Controller('companies')
 export class CompaniesController {

@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import CreateSalariesDto from './create-salaries.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import UpdateSalariesDto from 'src/dto/update/update-salaries.dto';
+import CreateSalariesDto from '../dto/create/create-salaries.dto';
 import { SalariesService } from './salaries.service';
 
 @Controller('salaries')
@@ -13,6 +14,11 @@ export class SalariesController {
         return this.salariesServise.inject(salariesDto)
     }
 
+    @Patch(':id')
+    update(@Param('id') _id: number, @Body() dto: UpdateSalariesDto) {
+        return this.salariesServise.update(_id, dto);
+    }
+
     @Get()
     getAll() {
         return this.salariesServise.getAll()
@@ -23,5 +29,9 @@ export class SalariesController {
         return this.salariesServise.getById(_id)
     }
 
+    @Delete(':id')
+    delete(@Param('id') _id: number) {
+        return this.salariesServise.delete(_id)
+    }
 
 }
