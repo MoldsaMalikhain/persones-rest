@@ -8,6 +8,7 @@ export default config = {
   username: 'root',
   password: 'Lthgfhjkm01',
   database: 'persones',
-  entities: ['dist/**/*.entity{.ts,.js}'],
+  entities: ['./entity*.ts', './build/src/entity/*.js'],
   synchronize: true,
+  autoLoadEntities: true,
 };

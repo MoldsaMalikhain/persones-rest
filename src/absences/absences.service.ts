@@ -1,4 +1,53 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Absences } from 'src/entity/absences.entity';
+import { Persones } from 'src/entity/persones.entity';
+import { Repository } from 'typeorm';
+import CreateAbsencesDto from '../dto/create/create-absences.dto';
 
 @Injectable()
-export class AbsencesService {}
+export class AbsencesService {
+
+    constructor(
+        @InjectRepository(Absences) private absenceRepository: Repository<Absences>,
+        @InjectRepository(Persones) private personeRepository: Repository<Persones>
+    ) { }
+
+    async create(absenceDetails: CreateAbsencesDto): Promise<Absences> {
+
+        const absenceEntity: Absences = await this.absenceRepository.create()
+
+        const {
+            type,
+            startDate,
+            endDate,
+            persone
+        } = absenceDetails;
+
+        absenceEntity.type = type;
+        absenceEntity.startDate = startDate;
+        absenceEntity.endDate = endDate;
+
+        try {
+            absenceEntity.persone = await this.personeRepository.findOneOrFail(persone)
+
+        } catch (err) {
+            absenceEntity.persone = null
+        }
+
+        await this.absenceRepository.save(absenceEntity);
+        return absenceEntity;
+    }
+
+    async getAll(): Promise<Absences[]> {
+        return this.absenceRepository.find()
+    }
+
+    async getById(_id: number): Promise<Absences> {
+        return this.absenceRepository.findOneOrFail(_id)
+    }
+
+
+
+}

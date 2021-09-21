@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, PersistedEntityNotFoundError, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Currencies } from "./currencies.entity";
 import { Persones } from "./persones.entity";
 
@@ -14,8 +14,8 @@ export class Salaries {
     @Column()
     amount: number;
 
-    @Column()
-    currency_id: number
+    // @Column()
+    // currency_id: number
 
     @Column("timestamp")
     startDate: number
@@ -23,8 +23,8 @@ export class Salaries {
     @Column("timestamp")
     endDate: number
 
-    @Column()
-    persone_id: number
+    // @Column()
+    // persone_id: number
 
     @ManyToOne(type => Persones, persone => persone.salaries)
     persone: Persones;
