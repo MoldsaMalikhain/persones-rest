@@ -12,6 +12,10 @@ import { Skills } from 'src/entity/skills.entity';
 import { Notes } from 'src/entity/notes.entity';
 import { Absences } from 'src/entity/absences.entity';
 import { Salaries } from 'src/entity/salaries.entity';
+import jwt from 'jsonwebtoken';
+import LoginPersonesDto from 'src/dto/login-persone.dto';
+import * as argon2 from 'argon2';
+import { AuthService } from './auth/auth.service';
 @Injectable()
 export class PersonesService {
 
@@ -22,6 +26,7 @@ export class PersonesService {
         @InjectRepository(Notes) private notesRepository: Repository<Notes>,
         @InjectRepository(Absences) private absencesRepository: Repository<Absences>,
         @InjectRepository(Salaries) private salariesRepository: Repository<Salaries>,
+        private readonly authServise: AuthService
     ) { }
 
     async create(personeDetails: CreatePersonesDto): Promise<PersoneRO> {
@@ -32,7 +37,8 @@ export class PersonesService {
             nameOnProject,
             startDate,
             endDate,
-            englishLvl
+            englishLvl,
+            password
         } = personeDetails;
 
         const qb = await getRepository(Persones)
@@ -53,6 +59,7 @@ export class PersonesService {
         newPersone.startDate = startDate;
         newPersone.endDate = endDate;
         newPersone.age = age;
+        newPersone.password = password;
 
         newPersone.skills = [];
         newPersone.notes = [];
@@ -105,6 +112,16 @@ export class PersonesService {
         return await this.personeRepository.save(updated);
     }
 
+    async findOne({ firstName, password }: LoginPersonesDto): Promise<Persones> {
+        const persone = await this.personeRepository.findOneOrFail({ firstName })
+        if (!persone) return null
+
+        if (await argon2.verify(persone.password, password))
+            return persone
+
+        return null;
+    }
+
     async getAll(): Promise<Persones[]> {
         return this.personeRepository.find({ relations: ['skills', 'roles'] });
     }
@@ -152,6 +169,23 @@ export class PersonesService {
         return await this.personeRepository.remove(personeToRemove);
     }
 
+    // public generateJWT(persone) {
+    //     const today = new Date();
+    //     const exp = new Date(today);
+    //     exp.setDate(today.getDate() + 60);
+
+    //     return jwt.sign({
+    //         id: persone.id,
+    //         username: persone.firstName,
+    //         // age: persone.age,
+    //         // nameOnProject: persone.nameOnProject,
+    //         // startDate: persone.startDate,
+    //         // endDate: persone.endDate,
+    //         // englishLvl: persone.englishLvl,
+    //         exp: exp.getTime() / 1000,
+    //     }, 'secret-key');
+    // };
+
     buildPersoneRo(persone) {
         const personeRo = {
             id: persone.id,
@@ -161,6 +195,7 @@ export class PersonesService {
             startDate: persone.startDate,
             endDate: persone.endDate,
             englishLvl: persone.englishLvl,
+            token: this.authServise.login,
             skills: persone.skills,
             notes: persone.notes,
             absences: persone.absences,

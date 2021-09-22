@@ -14,6 +14,7 @@ import { CurrencyRecordsModule } from './currency-records/currency-records.modul
 import { CurrenciesModule } from './currencies/currencies.module';
 import { CompaniesModule } from './companies/companies.module';
 import { AbsencesModule } from './absences/absences.module';
+import { AuthModule } from './persones/auth/auth.module';
 @Module({
   imports: [TypeOrmModule.forRoot(config),
     PersonesModule,
@@ -24,10 +25,11 @@ import { AbsencesModule } from './absences/absences.module';
     CurrencyRecordsModule,
     CurrenciesModule,
     CompaniesModule,
-    AbsencesModule
+    AbsencesModule,
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,],
 })
 export class AppModule {
   constructor(private connection: Connection) { }

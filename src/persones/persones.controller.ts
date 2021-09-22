@@ -1,13 +1,19 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, Request } from '@nestjs/common';
 import CreatePersonesDto from '../dto/create/create-persones.dto';
 import { PersonesService } from './persones.service';
 import UpdatePersonesDto from '../dto/update/update-persone.dto';
-
+import { AuthService } from './auth/auth.service';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { LocalAuthGuard } from './auth/local-auth.guard';
 @Controller('persones')
 export class PersonesController {
 
-  constructor(private readonly personesServis: PersonesService) { }
+  constructor(
+    private readonly personesServis: PersonesService,
+    private readonly authService: AuthService
+
+  ) { }
 
   @Post()
   postPersone(@Body() personDto: CreatePersonesDto) {
@@ -47,4 +53,48 @@ export class PersonesController {
   deletePersone(@Param('id') _id: number) {
     return this.personesServis.deletePersone(_id);
   }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  async login(@Request() req) {
+    return await this.authService.login(req.persone)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Request() req) {
+    return await req.persone
+  }
+
+  // @Post('/login')
+  // async login(@Body() loginDto: LoginPersonesDto): Promise<PersoneRO> {
+
+  //   const _persone = this.personesServis.findOne(loginDto)
+  //   const err = { Persone: 'User not found' };
+
+  //   if (!_persone) throw new HttpException({ err }, 401)
+
+  //   const token = await this.personesServis.generateJWT(_persone);
+
+  //   const {
+  //     firstName,
+  //     age,
+  //     nameOnProject,
+  //     englishLvl,
+  //     startDate,
+  //     endDate
+  //   } = _persone
+
+  //   const persone = {
+  //     firstName,
+  //     age,
+  //     nameOnProject,
+  //     englishLvl,
+  //     startDate,
+  //     endDate,
+  //     token
+  //   }
+
+  //   return { persone };
+  // }
 }

@@ -7,5 +7,6 @@ export default class CreatePersonesDto {
     readonly startDate: number;
     readonly endDate: number;
     readonly englishLvl: number;
+    readonly password: string;
 }
 

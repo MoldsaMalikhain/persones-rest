@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
 
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Timestamp } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Timestamp } from "typeorm";
 import { Absences } from "./absences.entity";
 import { Notes } from "./notes.entity";
 import { Roles } from "./roles.entity";
 import { Salaries } from "./salaries.entity";
 import { Skills } from "./skills.entity";
+import * as argon2 from 'argon2';
 
 
 
@@ -32,6 +33,14 @@ export class Persones {
 
     @Column()
     englishLvl: number;
+
+    @Column()
+    password: string;
+
+    @BeforeInsert()
+    async hashPassword() {
+        this.password = await argon2.hash(this.password);
+    }
 
     @ManyToMany(type => Skills)
     @JoinTable()

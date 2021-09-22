@@ -6,6 +6,7 @@ export interface Persone {
     startDate: number;
     endDate: number;
     englishLvl: number;
+    token: any;
     skills?: number[];
     notes?: number[];
     absences?: number[];
