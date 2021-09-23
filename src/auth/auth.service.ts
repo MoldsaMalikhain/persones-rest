@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import LoginDto from 'src/dto/login.dto';
 import { PersonService } from 'src/person/person.service';
 
 @Injectable()
@@ -18,6 +19,10 @@ export class AuthService {
       return result;
     }
     return null;
+  }
+
+  async register(registerDto: LoginDto) {
+    return;
   }
 
   async login(user: any) {

@@ -10,7 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class JwtAuthGuard implements CanActivate {
+export class JwtAdminAuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
   canActivate(
     context: ExecutionContext,
@@ -24,7 +24,10 @@ export class JwtAuthGuard implements CanActivate {
       if (bearer !== 'Bearer' || !token) throw new UnauthorizedException();
 
       req.person = this.jwtService.verify(token);
-      return true;
+
+      if (!req.person.admin) throw new UnauthorizedException();
+
+      return req.person.admin;
     } catch (error) {
       throw new HttpException(
         { message: 'Autharization fail', error },
