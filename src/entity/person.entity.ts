@@ -1,4 +1,12 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Role } from './role.entity';
+
 import * as argon2 from 'argon2';
 
 @Entity()
@@ -8,6 +16,9 @@ export class Person {
 
   @Column()
   username: string;
+
+  @Column()
+  firstname: string;
 
   @Column()
   age: string;
@@ -26,6 +37,9 @@ export class Person {
 
   @Column()
   password: string;
+
+  @ManyToOne((type) => Role, (role) => role.persone)
+  role: Role;
 
   @BeforeInsert()
   async hashPassword() {

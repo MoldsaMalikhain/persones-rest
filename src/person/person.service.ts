@@ -1,8 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators';
 import CreatePersonesDto from 'src/dto/create/person-create.dto';
+import LoginDto from 'src/dto/login.dto';
 import UpdatePersonesDto from 'src/dto/update/person-update.dto';
 import { Person } from 'src/entity/person.entity';
+import { Role } from 'src/entity/role.entity';
+import { RoleService } from 'src/role/role.service';
 import { getRepository, Repository } from 'typeorm';
 import { PersonRO } from './person.interface';
 
@@ -12,6 +15,8 @@ export type User = any;
 export class PersonService {
   constructor(
     @InjectRepository(Person) private personRepository: Repository<Person>,
+    @InjectRepository(Role) private roleRepository: Repository<Role>,
+    private readonly roleServise: RoleService,
   ) {}
 
   private readonly users = [
@@ -19,18 +24,19 @@ export class PersonService {
       userId: 1,
       username: 'Testus',
       password: 'password',
-      isAdmin: false,
+      role: 'all',
     },
     {
       userId: 2,
       username: 'SomeDude',
       password: 'passnotword',
-      isAdmin: true,
+      role: 'admin',
     },
   ];
 
   async create(personeDetails: CreatePersonesDto): Promise<PersonRO> {
     const {
+      firstname,
       username,
       age,
       nameOnProject,
@@ -38,6 +44,7 @@ export class PersonService {
       endDate,
       englishLvl,
       password,
+      role,
     } = personeDetails;
 
     const qb = getRepository(Person)
@@ -58,11 +65,15 @@ export class PersonService {
 
     newPerson.nameOnProject = nameOnProject;
     newPerson.englishLvl = englishLvl;
+    newPerson.firstname = firstname;
     newPerson.startDate = startDate;
     newPerson.password = password;
     newPerson.username = username;
     newPerson.endDate = endDate;
     newPerson.age = age;
+
+    newPerson.role = null;
+    if (role) newPerson.role = await this.roleServise.findByName(role);
 
     try {
       const savePerson = await this.personRepository.save(newPerson);
@@ -110,6 +121,27 @@ export class PersonService {
     return await this.personRepository.remove(toDelete);
   }
 
+  async findForRegister(registerDto: CreatePersonesDto) {
+    const toRegister = this.personRepository.findOne({
+      where: {
+        username: registerDto.username,
+        nameOnProject: registerDto.nameOnProject,
+      },
+    });
+    if (!toRegister) return false;
+    return true;
+  }
+
+  async findByName(loginDto: LoginDto) {
+    const byName = this.personRepository.findOneOrFail({
+      where: {
+        username: loginDto.username,
+      },
+    });
+    if (!byName) return null;
+    return byName;
+  }
+
   async findOne(username: string): Promise<User | undefined> {
     return await this.users.find((user) => user.username === username);
   }
@@ -124,6 +156,7 @@ export class PersonService {
       username: _person.username,
       endDate: _person.endDate,
       age: _person.age,
+      role: _person.role,
     };
     return { person: personRo };
   }
