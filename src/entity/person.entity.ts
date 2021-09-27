@@ -41,8 +41,8 @@ export class Person {
   @ManyToOne((type) => Role, (role) => role.persone)
   role: Role;
 
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await argon2.hash(this.password);
-  }
+  // @BeforeInsert()
+  // async hashPassword() {
+  //   this.password = await argon2.hash(this.password);
+  // }
 }

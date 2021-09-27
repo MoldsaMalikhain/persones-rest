@@ -6,6 +6,7 @@ import { JwtAuthGuard } from './auth/guard/jwt-guard';
 import { LocalAuthGuard } from './auth/guard/local-guard';
 // import LoginDto from './dto/login.dto';
 import { Roles } from './roles.decorator';
+import { ROLES } from 'magic.const';
 
 @Controller()
 export class AppController {
@@ -28,7 +29,7 @@ export class AppController {
     return this.authServise.login(req.user);
   }
 
-  @Roles('all')
+  @Roles(ROLES.USER)
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
@@ -37,9 +38,9 @@ export class AppController {
     return req.person;
   }
 
-  @Roles('admin')
+  // @Roles('admin')
   @UseGuards(JwtAuthGuard)
-  @Get('admin')
+  @Get(ROLES.ADMIN)
   getAdmin(@Request() req) {
     console.log(req.person);
     console.log(req.person.role);

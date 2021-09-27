@@ -7,7 +7,7 @@ export class Role {
   id: number;
 
   @Column({ default: 'all' })
-  role: string;
+  name: string;
 
   @OneToMany((type) => Person, (persone) => persone.role)
   persone: Person[];

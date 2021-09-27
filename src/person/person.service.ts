@@ -24,7 +24,7 @@ export class PersonService {
       userId: 1,
       username: 'Testus',
       password: 'password',
-      role: 'all',
+      role: 'user',
     },
     {
       userId: 2,
@@ -47,11 +47,11 @@ export class PersonService {
       role,
     } = personeDetails;
 
-    const qb = getRepository(Person)
+    const qb = await getRepository(Person)
       .createQueryBuilder('person')
       .where('person.username = :username', { username })
       .orWhere('person.nameOnProject = :nameOnProject', { nameOnProject });
-    const pr = qb.getOne();
+    const pr = await qb.getOne();
 
     if (pr) {
       const err = { username: 'Name and Name On Project must be unique' };
@@ -132,13 +132,15 @@ export class PersonService {
     return true;
   }
 
-  async findByName(loginDto: LoginDto) {
+  async findByName(username: string) {
     const byName = this.personRepository.findOneOrFail({
       where: {
-        username: loginDto.username,
+        username: username,
       },
+      relations: ['role'],
     });
     if (!byName) return null;
+    console.log(byName);
     return byName;
   }
 
