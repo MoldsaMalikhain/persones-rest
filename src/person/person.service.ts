@@ -106,20 +106,25 @@ export class PersonService {
     const { username, role, skills, notes, absences, salaries, managers } =
       personeDetails;
 
-    const qb = await getRepository(Person)
-      .createQueryBuilder('person')
-      .where('person.username = :username', { username });
-    const pr = await qb.getOne();
-    if (pr) {
-      const err = { username: 'Name is not eveilable' };
-      throw new HttpException(
-        { message: 'Input data validation faild', err },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // const qb = await getRepository(Person)
+    //   .createQueryBuilder('person')
+    //   .where('person.username = :username', { username });
+    // const pr = await qb.getOne();
+    // if (pr) {
+    //   const err = { username: 'Name is not eveilable' };
+    //   throw new HttpException(
+    //     { message: 'Input data validation faild', err },
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
+    // console.log(role.length);
 
-    toUpdate.role = null;
-    if (role) toUpdate.role = await this.roleRepository.findOneOrFail(role);
+    if (role) {
+      toUpdate.role = null;
+      toUpdate.role = await this.roleRepository.findOneOrFail({
+        where: { name: role },
+      });
+    }
 
     toUpdate.skills = await pushIn(skills, this.skillsRepository);
     toUpdate.notes = await pushIn(notes, this.notesRepository);
@@ -177,14 +182,14 @@ export class PersonService {
 
   async getAll(): Promise<Person[]> {
     return await this.personRepository.find({
-      relations: ['managers', 'notes'],
+      relations: ['managers', 'notes', 'skills', 'role'],
     });
   }
 
   async getById(_id: number): Promise<Person> {
     return await this.personRepository.findOneOrFail({
       where: { id: _id },
-      relations: ['managers', 'notes'],
+      relations: ['managers', 'notes', 'skills', 'role'],
     });
   }
 

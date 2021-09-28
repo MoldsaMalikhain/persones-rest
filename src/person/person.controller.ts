@@ -14,6 +14,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-guard';
 import CreateNotesDto from 'src/dto/create/note-create.dto';
 import CreatePersonesDto from 'src/dto/create/person-create.dto';
+import UpdatePersonesDto from 'src/dto/update/person-update.dto';
 import { Roles } from 'src/roles.decorator';
 import { PersonService } from './person.service';
 
@@ -36,17 +37,25 @@ export class PersonController {
 
   @Roles(ROLES.MANAGER)
   @UseGuards(JwtAuthGuard)
-  @Post('create/note')
-  async createNote(@Body() dto: CreateNotesDto, @Request() req) {
-    console.log('POST: creating the note');
-    return this.personService.createNote(dto, req.person);
+  @Post()
+  async createUser(@Body() dto: CreatePersonesDto) {
+    return this.personService.create(dto);
   }
 
   @Roles(ROLES.MANAGER)
   @UseGuards(JwtAuthGuard)
-  @Post()
-  async createUser(@Body() dto: CreatePersonesDto) {
-    return this.personService.create(dto);
+  @Patch(':id')
+  async updateUser(@Body() dto: UpdatePersonesDto, @Param('id') _id: number) {
+    console.log('PATCH: Person update');
+    return this.personService.update(dto, _id);
+  }
+
+  @Roles(ROLES.MANAGER)
+  @UseGuards(JwtAuthGuard)
+  @Post('create/note')
+  async createNote(@Body() dto: CreateNotesDto, @Request() req) {
+    console.log('POST: creating the note');
+    return this.personService.createNote(dto, req.person);
   }
 
   @Roles(ROLES.MANAGER)
