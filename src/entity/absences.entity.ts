@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Persones } from "./persones.entity";
+import { Person } from "./person.entity";
 
 
 @Entity()
@@ -18,7 +18,7 @@ export class Absences {
     @Column()
     type: number;
 
-    @ManyToOne(type => Persones, persone => persone.absences)
-    persone: Persones;
+    @ManyToOne(type => Person, person => person.absences)
+    person: Person;
 
 }

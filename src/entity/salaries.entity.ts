@@ -1,11 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Currencies } from "./currencies.entity";
-import { Persones } from "./persones.entity";
-
-
-
-@Entity()
+import { Person } from "./person.entity";
 export class Salaries {
 
     @PrimaryGeneratedColumn()
@@ -26,8 +22,8 @@ export class Salaries {
     // @Column()
     // persone_id: number
 
-    @ManyToOne(type => Persones, persone => persone.salaries)
-    persone: Persones;
+    @ManyToOne(type => Person, person => person.salaries)
+    person: Person;
 
     @ManyToOne(type => Currencies, currency => currency.salaries)
     currency: Currencies;

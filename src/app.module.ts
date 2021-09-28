@@ -1,34 +1,34 @@
-/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PersonesModule } from './persones/persones.module';
-import config from './mysql.config';
-import { Connection } from 'typeorm';
-import { NotesModule } from './notes/notes.module';
-import { RolesModule } from './roles/roles.module';
-import { SalariesModule } from './salaries/salaries.module';
-import { SkillsModule } from './skills/skills.module';
-import { CurrencyRecordsModule } from './currency-records/currency-records.module';
-import { CurrenciesModule } from './currencies/currencies.module';
-import { CompaniesModule } from './companies/companies.module';
-import { AbsencesModule } from './absences/absences.module';
+import { PersonModule } from './person/person.module';
+import { AuthModule } from './auth/auth.module';
+import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
+import { RoleModule } from './role/role.module';
+import { AbsenceModule } from './absence/absence.module';
+import { CompanyModule } from './company/company.module';
+import { CurrencyModule } from './currency/currency.module';
+import { CurrencyRecordModule } from './currency-record/currency-record.module';
+import { NoteModule } from './note/note.module';
+import { SalaryModule } from './salary/salary.module';
+import { SkillModule } from './skill/skill.module';
+import config from '../sqlconf';
+
 @Module({
-  imports: [TypeOrmModule.forRoot(config),
-    PersonesModule,
-    NotesModule,
-    RolesModule,
-    SalariesModule,
-    SkillsModule,
-    CurrencyRecordsModule,
-    CurrenciesModule,
-    CompaniesModule,
-    AbsencesModule
+  imports: [
+    TypeOrmModule.forRoot(config),
+    PersonModule,
+    AuthModule,
+    RoleModule,
+    AbsenceModule,
+    CompanyModule,
+    CurrencyModule,
+    CurrencyRecordModule,
+    NoteModule,
+    SalaryModule,
+    SkillModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  constructor(private connection: Connection) { }
-}
+export class AppModule {}

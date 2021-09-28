@@ -1,18 +1,19 @@
+import { Column, Entity, ManyToMany, ManyToOne } from "typeorm";
+import { Person } from "./person.entity";
+
 /* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Persones } from "./persones.entity";
-
-
 @Entity()
 export class Notes {
-    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ length: 255 })
     name: string;
 
-    @Column("timestamp")
+    @Column()
     date: number;
+
+    @Column({default: ' '})
+    text: string;
 
     // @Column()
     // manager_id: number;
@@ -20,9 +21,12 @@ export class Notes {
     // @Column()
     // persone_id: number;
 
-    @ManyToOne(type => Persones, user_m => user_m.managers)
-    user_m: Persones
+    @ManyToMany(() => Person, person => person.notes)
+    person: Person[];
 
-    @ManyToOne(type => Persones, user_p => user_p.persones)
-    user_p: Persones
+    @ManyToOne(type => Person, user_m => user_m.managers)
+    user_m: Person
+
+    // @ManyToOne(type => Person, user_p => user_p.person)
+    // user_p: Person
 }

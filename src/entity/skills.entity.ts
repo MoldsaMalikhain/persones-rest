@@ -12,7 +12,6 @@ export class Skills {
 
     @Column({
         length: 255,
-        default: "test"
     })
     name: string;
 
