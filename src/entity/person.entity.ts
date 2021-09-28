@@ -2,12 +2,19 @@ import {
   BeforeInsert,
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from './role.entity';
 
 import * as argon2 from 'argon2';
+import { Skills } from './skills.entity';
+import { Notes } from './notes.entity';
+import { Salaries } from './salaries.entity';
+import { Absences } from './absences.entity';
 
 @Entity()
 export class Person {
@@ -38,8 +45,28 @@ export class Person {
   @Column()
   password: string;
 
-  @ManyToOne((type) => Role, (role) => role.persone)
+  @ManyToMany((type) => Skills)
+  @JoinTable()
+  skills: Skills[];
+
+  @ManyToMany((type) => Notes, (notes) => notes.person)
+  @JoinTable()
+  notes: Notes[];
+
+  @ManyToOne((type) => Role, (role) => role.person)
   role: Role;
+
+  @OneToMany((type) => Salaries, (salaries) => salaries.person)
+  salaries: Salaries[];
+
+  @OneToMany((type) => Absences, (absences) => absences.person)
+  absences: Absences[];
+
+  // @OneToMany((type) => Notes, (person) => person.user_p)
+  // person: Notes[];
+
+  @OneToMany((type) => Notes, (managers) => managers.user_m)
+  managers: Notes[];
 
   // @BeforeInsert()
   // async hashPassword() {

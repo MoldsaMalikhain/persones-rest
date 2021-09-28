@@ -9,6 +9,6 @@ export class Role {
   @Column({ default: 'all' })
   name: string;
 
-  @OneToMany((type) => Person, (persone) => persone.role)
-  persone: Person[];
+  @OneToMany((type) => Person, (person) => person.role)
+  person: Person[];
 }

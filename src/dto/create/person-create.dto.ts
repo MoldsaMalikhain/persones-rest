@@ -8,4 +8,7 @@ export default class CreatePersonesDto {
   readonly englishLvl: number;
   readonly password: string;
   readonly role: string;
+  readonly skills: string[];
+  readonly persones?: number[];
+  readonly managers?: number[];
 }

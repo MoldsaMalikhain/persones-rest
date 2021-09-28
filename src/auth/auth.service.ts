@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import CreatePersonesDto from 'src/dto/create/person-create.dto';
-import LoginDto from 'src/dto/login.dto';
 // import LoginDto from 'src/dto/login.dto';
 // import RegisterDto from 'src/dto/registration.dto';
 import { PersonService } from 'src/person/person.service';
@@ -15,7 +14,7 @@ export class AuthService {
 
   async validate(username: string, password: string): Promise<any> {
     // const user = await this.personService.findOne(username);
-    console.log(username, password);
+    // console.log(username, password);
     const user = await this.personService.findByName(username);
     // console.log(user);
     if (user && user.password === password) {
