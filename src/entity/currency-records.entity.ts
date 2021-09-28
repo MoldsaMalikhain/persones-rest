@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, MustBeEntityError, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Companies } from './companies.entity';
 import { Currencies } from './currencies.entity';
 

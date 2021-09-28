@@ -1,5 +1,5 @@
-import { Column, Entity, ManyToMany, ManyToOne } from "typeorm";
-import { Person } from "./person.entity";
+import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
+import { Person } from './person.entity';
 
 /* eslint-disable prettier/prettier */
 @Entity()
