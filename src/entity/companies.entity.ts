@@ -15,7 +15,7 @@ export class Companies {
     @Column({ length: 255 })
     contacts: string;
 
-    @Column("timestamp")
+    @Column()
     createTime: number;
 
     @OneToMany(type => CurrencyRecords, records => records.company)

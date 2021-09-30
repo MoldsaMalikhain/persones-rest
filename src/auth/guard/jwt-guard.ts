@@ -31,6 +31,7 @@ export class JwtAuthGuard implements CanActivate {
 
       if (bearer !== 'Bearer' || !token) throw new UnauthorizedException();
       req.person = this.jwtService.verify(token);
+      console.log(req.person);
 
       if (roles.length > 0) {
         return roles[0].split(' ').includes(req.person.role);

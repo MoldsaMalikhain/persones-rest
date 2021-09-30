@@ -1,10 +1,10 @@
 export interface Salary {
   amount: number;
-  currency: number[];
   start_date: number;
   end_date: number;
-  person: number;
-  record: number;
+  currency: any;
+  person: any;
+  record: any;
 }
 
 export interface SalaryRO {

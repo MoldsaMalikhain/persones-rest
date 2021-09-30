@@ -8,6 +8,7 @@ import { Role } from 'src/entity/role.entity';
 import { Salaries } from 'src/entity/salaries.entity';
 import { Skills } from 'src/entity/skills.entity';
 import { RoleModule } from 'src/role/role.module';
+import { SalaryModule } from 'src/salary/salary.module';
 import { PersonController } from './person.controller';
 import { PersonService } from './person.service';
 
@@ -16,6 +17,7 @@ import { PersonService } from './person.service';
     forwardRef(() => RoleModule),
     TypeOrmModule.forFeature([Person, Skills, Absences, Notes, Salaries, Role]),
     AuthModule,
+    SalaryModule,
   ],
   controllers: [PersonController],
   providers: [PersonService],

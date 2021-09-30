@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Currencies } from "./currencies.entity";
+import { CurrencyRecords } from "./currency-records.entity";
 import { Person } from "./person.entity";
 
 
@@ -17,10 +18,10 @@ export class Salaries {
     // @Column()
     // currency_id: number
 
-    @Column("timestamp")
+    @Column()
     startDate: number
 
-    @Column("timestamp")
+    @Column()
     endDate: number
 
     // @Column()
@@ -31,4 +32,8 @@ export class Salaries {
 
     @ManyToOne(type => Currencies, currency => currency.salaries)
     currency: Currencies;
+
+    @OneToOne(type => CurrencyRecords, record => record.salaries)
+    // @JoinTable()
+    record: CurrencyRecords;
 }

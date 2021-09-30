@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, MustBeEntityError, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
+import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Companies } from './companies.entity';
 import { Currencies } from './currencies.entity';
+import { Salaries } from './salaries.entity';
 
 @Entity()
 export class CurrencyRecords {
@@ -10,7 +10,7 @@ export class CurrencyRecords {
     id: number;
 
     @Column()
-    projectSallary: number;
+    projectSalary: number;
 
     @Column("float")
     bankRate: number;
@@ -24,7 +24,7 @@ export class CurrencyRecords {
     @Column("tinyint")
     month: number;
 
-    @Column("timestamp")
+    @Column()
     operationDate: number;
 
     @ManyToOne(type => Currencies, currency => currency.records)
@@ -33,4 +33,7 @@ export class CurrencyRecords {
     @ManyToOne(type => Companies, company => company.records)
     company: Companies;
     // currencyEntity: CurrencyRecords;
+
+    @OneToOne(type => Salaries, salaries => salaries.record)
+    salaries: Salaries;
 }

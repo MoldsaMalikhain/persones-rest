@@ -64,7 +64,7 @@ export class PersonService {
     const pr = await qb.getOne();
 
     if (pr) {
-      const err = { username: 'Name and Name On Project must be unique' };
+      const err = { username: 'Username must be unique' };
       throw new HttpException(
         { message: 'Input data validation faild', err },
         HttpStatus.BAD_REQUEST,
@@ -137,7 +137,7 @@ export class PersonService {
     return this.personRepository.save(updated);
   }
 
-  async createNote(noteDto: CreateNotesDto, person: any) {
+  async createNote(noteDto: CreateNotesDto, person: any): Promise<Notes> {
     const { name, text, date, persones } = noteDto;
 
     const newNote = new Notes();
@@ -159,7 +159,7 @@ export class PersonService {
     }
   }
 
-  async updateNote(updateDto: CreateNotesDto, _id: number) {
+  async updateNote(updateDto: CreateNotesDto, _id: number): Promise<Notes> {
     const toUpdate = await this.notesRepository.findOneOrFail(_id);
     console.log(toUpdate);
 
@@ -210,15 +210,14 @@ export class PersonService {
     return true;
   }
 
-  async findByName(username: string): Promise<Person> {
+  async findByName(_username: string): Promise<Person> {
     const byName = this.personRepository.findOneOrFail({
       where: {
-        username: username,
+        username: _username,
       },
       relations: ['role'],
     });
     if (!byName) return null;
-    console.log(byName);
     return byName;
   }
 
