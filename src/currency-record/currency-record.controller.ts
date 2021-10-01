@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import CreateCurrencyRecordsDto from 'src/dto/create/currency.records-create.dto';
 import { CurrencyRecordService } from './currency-record.service';
 
-@Controller('currency-record')
+@Controller('record')
 export class CurrencyRecordController {
   constructor(private readonly recordService: CurrencyRecordService) {}
 

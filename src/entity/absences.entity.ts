@@ -9,10 +9,10 @@ export class Absences {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("timestamp")
+    @Column()
     startDate: number;
 
-    @Column("timestamp")
+    @Column()
     endDate: number;
 
     @Column()

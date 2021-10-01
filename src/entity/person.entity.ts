@@ -49,23 +49,27 @@ export class Person {
   @JoinTable()
   skills: Skills[];
 
-  @ManyToMany((type) => Notes, (notes) => notes.person)
+  @ManyToMany((type) => Notes, (notes) => notes.person, { cascade: true })
   @JoinTable()
   notes: Notes[];
 
   @ManyToOne((type) => Role, (role) => role.person)
   role: Role;
 
-  @OneToMany((type) => Salaries, (salaries) => salaries.person)
+  @OneToMany((type) => Salaries, (salaries) => salaries.person, {
+    cascade: true,
+  })
   salaries: Salaries[];
 
-  @OneToMany((type) => Absences, (absences) => absences.person)
+  @OneToMany((type) => Absences, (absences) => absences.person, {
+    cascade: true,
+  })
   absences: Absences[];
 
-  // @OneToMany((type) => Notes, (person) => person.user_p)
-  // person: Notes[];
+  @OneToMany((type) => Notes, (person) => person.user_p)
+  person: Notes[];
 
-  @OneToMany((type) => Notes, (managers) => managers.user_m)
+  @OneToMany((type) => Notes, (managers) => managers.user_m, { cascade: true })
   managers: Notes[];
 
   // @BeforeInsert()

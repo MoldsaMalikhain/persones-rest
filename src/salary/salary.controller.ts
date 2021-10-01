@@ -10,6 +10,11 @@ export class SalaryController {
     return this.salaryService.getAll();
   }
 
+  @Get(':id')
+  async getById(@Param('id') _id: number) {
+    return this.salaryService.getById(_id);
+  }
+
   @Delete(':id')
   async delete(@Param('id') _id: number) {
     return this.salaryService.delete(_id);

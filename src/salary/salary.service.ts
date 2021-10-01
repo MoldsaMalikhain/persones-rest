@@ -22,6 +22,32 @@ export class SalaryService {
     private readonly personeService: PersonService,
   ) {}
 
+  // async create(salaryDetails: CreateSalarysDto): Promise<Salaries> {
+  //   const { amount, currency, start_date, end_date, person, record } =
+  //     salaryDetails;
+
+  //   console.log(person);
+
+  //   const insert = `INSERT INTO salaries(amount, startDate, endDate, personId, recordId, currencyId)
+  //   VALUES (${amount}, ${start_date}, ${end_date},
+  //     (SELECT id FROM person WHERE username = '${person}'),
+  //     (SELECT id FROM currency_records WHERE id = ${record}),
+  //     (SELECT id FROM currencies WHERE id = ${currency})
+  //   );`;
+
+  //   //
+  //   try {
+  //     return await getRepository(Salaries).query(insert);
+  //     // const created = await this.salariesRepository.save(newSalary);
+  //     // return await this.buildRO(created);
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       { message: 'Data save faild', error },
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
+  // }
+
   async create(salaryDetails: CreateSalarysDto): Promise<SalaryRO> {
     const { amount, currency, start_date, end_date, person, record } =
       salaryDetails;
@@ -31,23 +57,15 @@ export class SalaryService {
     newSalary.amount = amount;
     newSalary.startDate = start_date;
     newSalary.endDate = end_date;
+    newSalary.record = null;
 
-    const qb = await getRepository(Person)
-      .createQueryBuilder('person')
-      .where('person.username = :person', { person });
-    const personName = await qb.getOne();
+    const personName = await this.personeRepository.findOneOrFail({
+      where: { username: person },
+    });
 
-    // const personName = await this.personeRepository.findOneOrFail({
-    //   where: { username: person },
-    // });
-
-    // newSalary.person = personName;
-    // newSalary.record = await this.recordRepository.findOneOrFail(record);
-    // newSalary.currency = await this.currencyRepository.findOneOrFail(currency);
-
-    console.log(newSalary);
-
-    // console.log(await this.salariesRepository.save(newSalary));
+    newSalary.person = personName;
+    newSalary.record = await this.recordRepository.findOneOrFail(record);
+    newSalary.currency = await this.currencyRepository.findOneOrFail(currency);
 
     try {
       const created = await this.salariesRepository.save(newSalary);
@@ -58,6 +76,10 @@ export class SalaryService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    // console.log(newSalary);
+
+    // console.log(await this.salariesRepository.save(newSalary));
+    // console.log(await getRepository(Salaries).query(insert));
   }
 
   async update(
@@ -72,13 +94,18 @@ export class SalaryService {
   }
 
   async getById(_id: number): Promise<Salaries> {
-    const byId = await this.salariesRepository.findOneOrFail(_id);
+    const byId = await this.salariesRepository.findOneOrFail({
+      where: { id: _id },
+      relations: ['currency', 'person', 'record'],
+    });
     if (!byId) return null;
     return byId;
   }
 
   async getAll(): Promise<Salaries[]> {
-    return await this.salariesRepository.find({});
+    return await this.salariesRepository.find({
+      relations: ['currency', 'person', 'record'],
+    });
   }
 
   async delete(_id: number): Promise<Salaries> {

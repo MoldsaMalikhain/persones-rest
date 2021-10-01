@@ -1,39 +1,44 @@
-/* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Companies } from './companies.entity';
 import { Currencies } from './currencies.entity';
 import { Salaries } from './salaries.entity';
 
 @Entity()
 export class CurrencyRecords {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    projectSalary: number;
+  @Column()
+  projectSalary: number;
 
-    @Column("float")
-    bankRate: number;
+  @Column('float')
+  bankRate: number;
 
-    @Column("float")
-    taxRate: number;
+  @Column('float')
+  taxRate: number;
 
-    @Column("tinyint")
-    net: number;
+  @Column('tinyint')
+  net: number;
 
-    @Column("tinyint")
-    month: number;
+  @Column('tinyint')
+  month: number;
 
-    @Column()
-    operationDate: number;
+  @Column()
+  operationDate: number;
 
-    @ManyToOne(type => Currencies, currency => currency.records)
-    currency: Currencies
+  @ManyToOne((type) => Currencies, (currency) => currency.records)
+  currency: Currencies;
 
-    @ManyToOne(type => Companies, company => company.records)
-    company: Companies;
-    // currencyEntity: CurrencyRecords;
+  @ManyToOne((type) => Companies, (company) => company.records)
+  company: Companies;
+  // currencyEntity: CurrencyRecords;
 
-    @OneToOne(type => Salaries, salaries => salaries.record)
-    salaries: Salaries;
+  @OneToOne((type) => Salaries, (salaries) => salaries.record)
+  salaries: Salaries;
 }

@@ -29,6 +29,6 @@ export class Notes {
     @ManyToOne(type => Person, user_m => user_m.managers)
     user_m: Person
 
-    // @ManyToOne(type => Person, user_p => user_p.person)
-    // user_p: Person
+    @ManyToOne(type => Person, user_p => user_p.person)
+    user_p: Person
 }

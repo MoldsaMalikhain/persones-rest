@@ -138,7 +138,7 @@ export class PersonService {
   }
 
   async createNote(noteDto: CreateNotesDto, person: any): Promise<Notes> {
-    const { name, text, date, persones } = noteDto;
+    const { name, text, date, persones, } = noteDto;
 
     const newNote = new Notes();
 
@@ -147,6 +147,7 @@ export class PersonService {
     newNote.text = text;
 
     newNote.person = await pushIn(persones, this.personRepository);
+    // newNote.user_p = await this.findByName(persones)
     newNote.user_m = await this.findByName(person.username);
 
     try {
@@ -182,14 +183,21 @@ export class PersonService {
 
   async getAll(): Promise<Person[]> {
     return await this.personRepository.find({
-      relations: ['managers', 'notes', 'skills', 'role'],
+      relations: [
+        'managers',
+        'notes',
+        'skills',
+        'role',
+        'salaries',
+        'absences',
+      ],
     });
   }
 
   async getById(_id: number): Promise<Person> {
     return await this.personRepository.findOneOrFail({
       where: { id: _id },
-      relations: ['managers', 'notes', 'skills', 'role'],
+      relations: ['managers', 'notes', 'skills', 'role', 'salaries'],
     });
   }
 

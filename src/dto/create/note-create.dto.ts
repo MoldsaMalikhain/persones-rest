@@ -4,4 +4,5 @@ export default class CreateNotesDto {
   readonly text: string;
   readonly user_m?: number;
   readonly persones?: number[];
+  readonly user_p: number;
 }
