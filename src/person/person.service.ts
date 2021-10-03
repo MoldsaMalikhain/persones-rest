@@ -148,13 +148,11 @@ export class PersonService {
     const persones = [user_p, user_m];
 
     const elements = [];
-    // persones.map(async (personElement) => {
-    //   elements.push(
-    //     await this.personRepository.findOneOrFail({
-    //       where: { username: personElement },
-    //     }),
-    //   );
-    // });
+
+    /**
+     * TODO
+     * Find out why in note table second person is saved as ID
+     */
 
     for (let item = 0; item < persones.length; item++) {
       const element = await this.personRepository.findOneOrFail({
