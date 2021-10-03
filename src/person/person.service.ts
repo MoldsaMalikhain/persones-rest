@@ -138,20 +138,44 @@ export class PersonService {
   }
 
   async createNote(noteDto: CreateNotesDto, person: any): Promise<Notes> {
-    const { name, text, date, persones, } = noteDto;
-
+    const { user_p } = noteDto;
+    const user_m: string = person.username;
     const newNote = new Notes();
 
-    newNote.name = name;
-    newNote.date = date;
-    newNote.text = text;
-
-    newNote.person = await pushIn(persones, this.personRepository);
-    // newNote.user_p = await this.findByName(persones)
+    newNote.user_p = await this.findByName(user_p);
     newNote.user_m = await this.findByName(person.username);
 
+    const persones = [user_p, user_m];
+
+    const elements = [];
+    // persones.map(async (personElement) => {
+    //   elements.push(
+    //     await this.personRepository.findOneOrFail({
+    //       where: { username: personElement },
+    //     }),
+    //   );
+    // });
+
+    for (let item = 0; item < persones.length; item++) {
+      const element = await this.personRepository.findOneOrFail({
+        where: { username: persones[item] },
+      });
+      elements.push(element);
+    }
+
+    newNote.person = await elements;
+
+    // console.log(newNote.person);
+
+    // newNote.person = await persones.map(
+    //   (personArray) => await pushIn(personArray, this.personRepository),
+    // );
+    // newNote.person = ;
+    // persones.forEach(personElement => await pushIn(personElement, this.personRepository)
+
     try {
-      return await this.notesRepository.save(newNote);
+      const created = await Object.assign(noteDto, newNote);
+      return await this.notesRepository.save(created);
     } catch (error) {
       throw new HttpException(
         { message: 'Data save faild', error },

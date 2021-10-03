@@ -23,12 +23,12 @@ export class Notes {
     // @Column()
     // persone_id: number;
 
-    @ManyToMany(() => Person, person => person.notes)
-    person: Person[];
-
     @ManyToOne(type => Person, user_m => user_m.managers)
     user_m: Person
 
     @ManyToOne(type => Person, user_p => user_p.person)
     user_p: Person
+
+    @ManyToMany(() => Person, person => person.notes)
+    person: Person[];
 }
