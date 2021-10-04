@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Person } from "./person.entity";
 
 
@@ -9,11 +9,11 @@ export class Absences {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    startDate: number;
+    @CreateDateColumn()
+    startDate: Date;
 
-    @Column()
-    endDate: number;
+    @DeleteDateColumn()
+    endDate: Date;
 
     @Column()
     type: number;

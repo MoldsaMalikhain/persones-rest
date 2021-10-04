@@ -3,8 +3,6 @@ export interface Person {
   username: string;
   age: string;
   nameOnProject: number;
-  startDate: number;
-  endDate: number;
   englishLvl: number;
   // token: any;
   // skills?: number[];

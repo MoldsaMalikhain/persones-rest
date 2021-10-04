@@ -12,7 +12,7 @@ export class CompanyService {
   ) {}
 
   async create(companyDetails: CreateCompaniesDto): Promise<Companies> {
-    const { name, contacts, createTime } = companyDetails;
+    const { name } = companyDetails;
 
     const qb = await getRepository(Companies)
       .createQueryBuilder('companies')
@@ -28,13 +28,9 @@ export class CompanyService {
 
     const newCompany = new Companies();
 
-    newCompany.name = name;
-    newCompany.contacts = contacts;
-    newCompany.createTime = createTime;
-
     try {
-      const created = await this.companyRepository.save(newCompany);
-      return created;
+      const created = Object.assign(companyDetails, newCompany);
+      return await this.companyRepository.save(created);
     } catch (error) {
       throw new HttpException(
         { message: 'Data save faild', error },

@@ -1,12 +1,15 @@
 import {
   BeforeInsert,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Role } from './role.entity';
 
@@ -33,17 +36,23 @@ export class Person {
   @Column()
   nameOnProject: number;
 
-  @Column()
-  startDate: number;
+  @CreateDateColumn()
+  startDate: Date;
 
-  @Column()
-  endDate: number;
+  @UpdateDateColumn()
+  updateDate: Date;
+
+  @DeleteDateColumn()
+  endDate: Date;
 
   @Column()
   englishLvl: number;
 
   @Column()
   password: string;
+
+  @ManyToOne((type) => Person, (persones) => persones.person)
+  persones: Person[];
 
   @ManyToMany((type) => Skills)
   @JoinTable()

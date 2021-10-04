@@ -1,34 +1,33 @@
-/* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Person } from "./person.entity";
-
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Person } from './person.entity';
 
 @Entity()
 export class Notes {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ length: 255 })
-    name: string;
+  @Column({ length: 255 })
+  name: string;
 
-    @Column()
-    date: number;
+  @CreateDateColumn()
+  date: Date;
 
-    @Column({default: ' '})
-    text: string;
+  @Column({ default: ' ' })
+  text: string;
 
-    // @Column()
-    // manager_id: number;
+  @ManyToOne((type) => Person, (user_m) => user_m.managers)
+  user_m: Person;
 
-    // @Column()
-    // persone_id: number;
+  @ManyToOne((type) => Person, (user_p) => user_p.person)
+  user_p: Person;
 
-    @ManyToOne(type => Person, user_m => user_m.managers)
-    user_m: Person
-
-    @ManyToOne(type => Person, user_p => user_p.person)
-    user_p: Person
-
-    @ManyToMany(() => Person, person => person.notes)
-    person: Person[];
+  @ManyToMany(() => Person, (person) => person.notes)
+  person: Person[];
 }

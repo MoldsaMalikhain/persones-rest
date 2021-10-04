@@ -22,41 +22,12 @@ export class SalaryService {
     private readonly personeService: PersonService,
   ) {}
 
-  // async create(salaryDetails: CreateSalarysDto): Promise<Salaries> {
-  //   const { amount, currency, start_date, end_date, person, record } =
-  //     salaryDetails;
-
-  //   console.log(person);
-
-  //   const insert = `INSERT INTO salaries(amount, startDate, endDate, personId, recordId, currencyId)
-  //   VALUES (${amount}, ${start_date}, ${end_date},
-  //     (SELECT id FROM person WHERE username = '${person}'),
-  //     (SELECT id FROM currency_records WHERE id = ${record}),
-  //     (SELECT id FROM currencies WHERE id = ${currency})
-  //   );`;
-
-  //   //
-  //   try {
-  //     return await getRepository(Salaries).query(insert);
-  //     // const created = await this.salariesRepository.save(newSalary);
-  //     // return await this.buildRO(created);
-  //   } catch (error) {
-  //     throw new HttpException(
-  //       { message: 'Data save faild', error },
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  // }
-
   async create(salaryDetails: CreateSalarysDto): Promise<SalaryRO> {
-    const { amount, currency, start_date, end_date, person, record } =
-      salaryDetails;
+    const { amount, currency, person, record } = salaryDetails;
 
     const newSalary = new Salaries();
 
     newSalary.amount = amount;
-    newSalary.startDate = start_date;
-    newSalary.endDate = end_date;
     newSalary.record = null;
 
     const personName = await this.personeRepository.findOneOrFail({
@@ -76,10 +47,6 @@ export class SalaryService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    // console.log(newSalary);
-
-    // console.log(await this.salariesRepository.save(newSalary));
-    // console.log(await getRepository(Salaries).query(insert));
   }
 
   async update(
@@ -118,11 +85,35 @@ export class SalaryService {
       id: _salary.id,
       amount: _salary.amount,
       currency: _salary.currency,
-      start_date: _salary.startDate,
-      end_date: _salary.endDate,
       person: _salary.person,
       record: _salary.record,
     };
     return { salary: salaryRo };
   }
 }
+
+// async create(salaryDetails: CreateSalarysDto): Promise<Salaries> {
+//   const { amount, currency, start_date, end_date, person, record } =
+//     salaryDetails;
+
+//   console.log(person);
+
+//   const insert = `INSERT INTO salaries(amount, startDate, endDate, personId, recordId, currencyId)
+//   VALUES (${amount}, ${start_date}, ${end_date},
+//     (SELECT id FROM person WHERE username = '${person}'),
+//     (SELECT id FROM currency_records WHERE id = ${record}),
+//     (SELECT id FROM currencies WHERE id = ${currency})
+//   );`;
+
+//   //
+//   try {
+//     return await getRepository(Salaries).query(insert);
+//     // const created = await this.salariesRepository.save(newSalary);
+//     // return await this.buildRO(created);
+//   } catch (error) {
+//     throw new HttpException(
+//       { message: 'Data save faild', error },
+//       HttpStatus.BAD_REQUEST,
+//     );
+//   }
+// }

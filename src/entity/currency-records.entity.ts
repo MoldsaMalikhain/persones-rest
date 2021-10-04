@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToOne,
@@ -29,8 +30,8 @@ export class CurrencyRecords {
   @Column('tinyint')
   month: number;
 
-  @Column()
-  operationDate: number;
+  @CreateDateColumn()
+  operationDate: Date;
 
   @ManyToOne((type) => Currencies, (currency) => currency.records)
   currency: Currencies;

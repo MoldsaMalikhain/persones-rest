@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { CurrencyRecords } from './currency-records.entity';
 
 @Entity()
@@ -12,8 +18,8 @@ export class Companies {
   @Column({ length: 255 })
   contacts: string;
 
-  @Column()
-  createTime: number;
+  @CreateDateColumn()
+  createTime: Date;
 
   @OneToMany((type) => CurrencyRecords, (records) => records.company)
   records: CurrencyRecords[];

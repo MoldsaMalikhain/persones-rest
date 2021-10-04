@@ -1,5 +1,7 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -22,11 +24,11 @@ export class Salaries {
   // @Column()
   // currency_id: number
 
-  @Column()
-  startDate: number;
+  @CreateDateColumn()
+  startDate: Date;
 
-  @Column()
-  endDate: number;
+  @DeleteDateColumn()
+  endDate: Date;
 
   // @Column()
   // persone_id: number

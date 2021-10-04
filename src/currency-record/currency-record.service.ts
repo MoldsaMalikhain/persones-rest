@@ -18,32 +18,16 @@ export class CurrencyRecordService {
   ) {}
 
   async create(recordsDto: CreateCurrencyRecordsDto): Promise<CurrencyRecords> {
-    const {
-      projectSalary,
-      bankRate,
-      taxRate,
-      net,
-      month,
-      operationDate,
-      currency,
-      company,
-    } = recordsDto;
+    const { currency, company } = recordsDto;
 
     const newRecord = new CurrencyRecords();
-
-    newRecord.projectSalary = projectSalary;
-    newRecord.bankRate = bankRate;
-    newRecord.taxRate = taxRate;
-    newRecord.net = net;
-    newRecord.month = month;
-    newRecord.operationDate = operationDate;
 
     newRecord.currency = await this.currencyRepository.findOneOrFail(currency);
     newRecord.company = await this.companiesRepository.findOneOrFail(company);
 
     try {
-      const created = await this.currencyRecRepository.save(newRecord);
-      return created;
+      const created = Object.assign(recordsDto, newRecord);
+      return await this.currencyRecRepository.save(created);
     } catch (error) {
       throw new HttpException(
         { message: 'Data save faild', error },

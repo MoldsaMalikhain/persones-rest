@@ -46,17 +46,8 @@ export class PersonService {
   ];
 
   async create(personeDetails: CreatePersonesDto): Promise<PersonRO> {
-    const {
-      firstname,
-      username,
-      age,
-      nameOnProject,
-      startDate,
-      endDate,
-      englishLvl,
-      password,
-      role,
-    } = personeDetails;
+    const { username, role, skills, notes, absences, salaries, managers } =
+      personeDetails;
 
     const qb = await getRepository(Person)
       .createQueryBuilder('person')
@@ -73,20 +64,17 @@ export class PersonService {
 
     const newPerson = new Person();
 
-    newPerson.nameOnProject = nameOnProject;
-    newPerson.englishLvl = englishLvl;
-    newPerson.firstname = firstname;
-    newPerson.startDate = startDate;
-    newPerson.password = password;
-    newPerson.username = username;
-    newPerson.endDate = endDate;
-    newPerson.age = age;
+    newPerson.skills = await pushIn(skills, this.skillsRepository);
+    newPerson.notes = await pushIn(notes, this.notesRepository);
+    newPerson.notes = await pushIn(managers, this.notesRepository);
+    newPerson.absences = await pushIn(absences, this.absencesRepository);
+    newPerson.salaries = await pushIn(salaries, this.salariesRepository);
 
-    newPerson.role = null;
-    if (role) newPerson.role = await this.roleServise.findByName(role);
+    newPerson.role = await this.roleServise.findByName(role);
 
     try {
-      const savePerson = await this.personRepository.save(newPerson);
+      const created = await Object.assign(personeDetails, newPerson);
+      const savePerson = await this.personRepository.save(created);
       return await this.buildPersonRo(savePerson);
     } catch (error) {
       throw new HttpException(
@@ -105,19 +93,6 @@ export class PersonService {
 
     const { username, role, skills, notes, absences, salaries, managers } =
       personeDetails;
-
-    // const qb = await getRepository(Person)
-    //   .createQueryBuilder('person')
-    //   .where('person.username = :username', { username });
-    // const pr = await qb.getOne();
-    // if (pr) {
-    //   const err = { username: 'Name is not eveilable' };
-    //   throw new HttpException(
-    //     { message: 'Input data validation faild', err },
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
-    // console.log(role.length);
 
     if (role) {
       toUpdate.role = null;
@@ -149,11 +124,6 @@ export class PersonService {
 
     const elements = [];
 
-    /**
-     * TODO
-     * Find out why in note table second person is saved as ID
-     */
-
     for (let item = 0; item < persones.length; item++) {
       const element = await this.personRepository.findOneOrFail({
         where: { username: persones[item] },
@@ -162,14 +132,6 @@ export class PersonService {
     }
 
     newNote.person = await elements;
-
-    // console.log(newNote.person);
-
-    // newNote.person = await persones.map(
-    //   (personArray) => await pushIn(personArray, this.personRepository),
-    // );
-    // newNote.person = ;
-    // persones.forEach(personElement => await pushIn(personElement, this.personRepository)
 
     try {
       const created = await Object.assign(noteDto, newNote);
@@ -186,15 +148,9 @@ export class PersonService {
     const toUpdate = await this.notesRepository.findOneOrFail(_id);
     console.log(toUpdate);
 
-    const { name, text } = updateDto;
-
-    toUpdate.name = name;
-    toUpdate.text = text;
-    // if (user_p)
-    //   toUpdate.user_p = await this.personRepository.findOneOrFail(user_p);
-
     try {
-      return await this.notesRepository.save(toUpdate);
+      const created = await Object.assign(updateDto, toUpdate);
+      return await this.notesRepository.save(created);
     } catch (error) {
       throw new HttpException(
         { message: 'Data save faild', error },
@@ -212,6 +168,8 @@ export class PersonService {
         'role',
         'salaries',
         'absences',
+        'person',
+        'persones',
       ],
     });
   }
@@ -260,10 +218,8 @@ export class PersonService {
       id: _person.id,
       nameOnProject: _person.nameOnProject,
       englishLvl: _person.englishLvl,
-      startDate: _person.startDate,
       password: _person.password,
       username: _person.username,
-      endDate: _person.endDate,
       age: _person.age,
       role: _person.role,
     };

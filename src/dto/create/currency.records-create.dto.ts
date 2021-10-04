@@ -4,7 +4,6 @@ export default class CreateCurrencyRecordsDto {
   readonly taxRate: number;
   readonly net: number;
   readonly month: number;
-  readonly operationDate: number;
   readonly currency: number;
   readonly company: number;
 }

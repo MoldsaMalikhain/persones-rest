@@ -12,7 +12,7 @@ export class CurrencyService {
   ) {}
 
   async create(currencyDetails: CreateCurrencyDto): Promise<Currencies> {
-    const { name, rate, symbol } = currencyDetails;
+    const { name } = currencyDetails;
 
     const qb = await getRepository(Currencies)
       .createQueryBuilder('currencies')
@@ -29,13 +29,9 @@ export class CurrencyService {
 
     const newCurrency = new Currencies();
 
-    newCurrency.name = name;
-    newCurrency.rate = rate;
-    newCurrency.symbol = symbol;
-
     try {
-      const created = await this.currencyRepository.save(newCurrency);
-      return created;
+      const created = Object.assign(currencyDetails, newCurrency);
+      return await this.currencyRepository.save(created);
     } catch (error) {
       throw new HttpException(
         { message: 'Data save faild', error },
