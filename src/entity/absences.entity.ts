@@ -1,24 +1,33 @@
-/* eslint-disable prettier/prettier */
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Person } from "./person.entity";
-
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Person } from './person.entity';
 
 @Entity()
 export class Absences {
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @ApiProperty()
+  @CreateDateColumn()
+  startDate: Date;
 
-    @CreateDateColumn()
-    startDate: Date;
+  @ApiProperty()
+  @DeleteDateColumn()
+  endDate: Date;
 
-    @DeleteDateColumn()
-    endDate: Date;
+  @ApiProperty()
+  @Column()
+  type: number;
 
-    @Column()
-    type: number;
-
-    @ManyToOne(type => Person, person => person.absences)
-    person: Person;
-
+  @ApiProperty({ type: () => Person })
+  @ManyToOne((type) => Person, (person) => person.absences)
+  person: Person;
 }
