@@ -1,18 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator';
 
 export default class CreateCurrencyRecordsDto {
-  @ApiProperty()
+  @ApiProperty({ description: 'Allocated salaty for position of user' })
   readonly projectSalary: number;
-  @ApiProperty()
+  @ApiProperty({ description: 'Persent of bank' })
   readonly bankRate: number;
-  @ApiProperty()
+  @ApiProperty({ description: 'Tax' })
   readonly taxRate: number;
-  @ApiProperty()
+  @ApiProperty({ description: 'Net profit' })
   readonly net: number;
-  @ApiProperty()
+  @ApiProperty({ description: 'When record has been created' })
   readonly month: number;
-  @ApiProperty()
+  @ApiProperty({ description: 'Currency in rotation' })
   readonly currency: number;
-  @ApiProperty()
+  @ApiProperty({ description: 'Sender/Customer' })
   readonly company: number;
 }

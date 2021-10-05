@@ -9,7 +9,7 @@ import {
   Request,
   Patch,
 } from '@nestjs/common';
-import { ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiBody } from '@nestjs/swagger/dist/decorators/api-body.decorator';
 import { ROLES } from 'magic.const';
 import { AuthService } from 'src/auth/auth.service';
@@ -27,6 +27,7 @@ import { SalaryService } from 'src/salary/salary.service';
 import { PersonRO } from './person.interface';
 import { PersonService } from './person.service';
 
+@ApiTags('Person')
 @Controller('person')
 export class PersonController {
   constructor(
@@ -36,11 +37,21 @@ export class PersonController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all Persones in system' })
+  @ApiCreatedResponse({
+    description: 'Here is Person which you want to find',
+    type: Person,
+  })
   async getAll(): Promise<Person[]> {
     return this.personService.getAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get Person in system' })
+  @ApiCreatedResponse({
+    description: 'Here is Person which you want to find',
+    type: Person,
+  })
   async getById(@Param('id') _id: number): Promise<Person> {
     return this.personService.getById(_id);
   }
@@ -49,6 +60,7 @@ export class PersonController {
   // @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBody({ type: CreatePersonesDto })
+  @ApiOperation({ summary: 'Create Person in system' })
   @ApiCreatedResponse({
     description: 'Person record has been successfully created',
     type: Person,
@@ -61,6 +73,7 @@ export class PersonController {
   // @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiBody({ type: CreatePersonesDto })
+  @ApiOperation({ summary: 'Update Person in system' })
   @ApiCreatedResponse({
     description: 'Person record has been successfully updated',
     type: Person,
@@ -76,6 +89,7 @@ export class PersonController {
   @Roles(ROLES.MANAGER)
   @UseGuards(JwtAuthGuard)
   @ApiBody({ type: CreateNotesDto })
+  @ApiOperation({ summary: 'Create Note in system' })
   @ApiCreatedResponse({
     description: 'Note record has been successfully created',
     type: Notes,
@@ -93,6 +107,7 @@ export class PersonController {
   // @UseGuards(JwtAuthGuard)
   @Patch('note/:id')
   @ApiBody({ type: CreateNotesDto })
+  @ApiOperation({ summary: 'Update Note in system' })
   @ApiCreatedResponse({
     description: 'Note record has been successfully updated',
     type: Notes,
@@ -107,6 +122,7 @@ export class PersonController {
   // @Roles(ROLES.MANAGER)
   // @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete Person from system' })
   @ApiCreatedResponse({
     description: 'Person record has been successfully deleted',
     type: Person,
@@ -118,6 +134,7 @@ export class PersonController {
   // @Roles(ROLES.MANAGER)
   // @UseGuards(JwtAuthGuard)
   @Post('salary')
+  @ApiOperation({ summary: 'Create SAlary in system' })
   @ApiCreatedResponse({
     description: 'Salaries record has been successfully created',
     type: Salaries,

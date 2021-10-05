@@ -1,8 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator';
 
 export default class CreateAbsenceDto {
-  @ApiProperty()
+  @ApiProperty({
+    default: 1,
+  })
   readonly type: number;
-  @ApiProperty()
+  @ApiProperty({
+    default: 1,
+    description: 'Absent user',
+  })
   readonly person: string;
 }

@@ -30,21 +30,6 @@ export class PersonService {
     private readonly roleServise: RoleService,
   ) {}
 
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'Testus',
-      password: 'password',
-      role: 'user',
-    },
-    {
-      userId: 2,
-      username: 'SomeDude',
-      password: 'passnotword',
-      role: 'admin',
-    },
-  ];
-
   async create(personeDetails: CreatePersonesDto): Promise<PersonRO> {
     const { username, role, skills, notes, absences, salaries, managers } =
       personeDetails;
@@ -209,9 +194,24 @@ export class PersonService {
     return byName;
   }
 
-  async findOne(username: string): Promise<User | undefined> {
-    return await this.users.find((user) => user.username === username);
-  }
+  // private readonly users = [
+  //   {
+  //     userId: 1,
+  //     username: 'Testus',
+  //     password: 'password',
+  //     role: 'user',
+  //   },
+  //   {
+  //     userId: 2,
+  //     username: 'SomeDude',
+  //     password: 'passnotword',
+  //     role: 'admin',
+  //   },
+  // ];
+
+  // async findOne(username: string): Promise<User | undefined> {
+  //   return await this.users.find((user) => user.username === username);
+  // }
 
   async buildPersonRo(_person: Person) {
     const personRo = {
