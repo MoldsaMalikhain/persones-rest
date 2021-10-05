@@ -1,30 +1,50 @@
-/* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Currencies } from "./currencies.entity";
-import { Person } from "./person.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Currencies } from './currencies.entity';
+import { CurrencyRecords } from './currency-records.entity';
+import { Person } from './person.entity';
+
+@Entity()
 export class Salaries {
+  @PrimaryGeneratedColumn()
+  @ApiProperty()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column()
+  @ApiProperty()
+  amount: number;
 
-    @Column()
-    amount: number;
+  // @Column()
+  // currency_id: number
 
-    // @Column()
-    // currency_id: number
+  @CreateDateColumn()
+  @ApiProperty()
+  startDate: Date;
 
-    @Column("timestamp")
-    startDate: number
+  @DeleteDateColumn()
+  @ApiProperty()
+  endDate: Date;
 
-    @Column("timestamp")
-    endDate: number
+  @ManyToOne((type) => Person, (person) => person.salaries)
+  @ApiProperty({ type: () => Person })
+  person: Person;
 
-    // @Column()
-    // persone_id: number
+  @ApiProperty({ type: () => Currencies })
+  @ManyToOne((type) => Currencies, (currency) => currency.salaries)
+  currency: Currencies;
 
-    @ManyToOne(type => Person, person => person.salaries)
-    person: Person;
-
-    @ManyToOne(type => Currencies, currency => currency.salaries)
-    currency: Currencies;
+  @ApiProperty({ type: () => CurrencyRecords })
+  @OneToOne((type) => CurrencyRecords, (record) => record.salaries)
+  @JoinColumn()
+  record: CurrencyRecords;
 }

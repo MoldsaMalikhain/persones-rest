@@ -1,18 +1,15 @@
-/* eslint-disable prettier/prettier */
-
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
-
+import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Skills {
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column({
-        length: 255,
-    })
-    name: string;
-
+  @ApiProperty()
+  @Column({
+    length: 255,
+  })
+  name: string;
 }

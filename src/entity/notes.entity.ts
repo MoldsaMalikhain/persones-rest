@@ -1,32 +1,41 @@
-import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Person } from './person.entity';
 
-/* eslint-disable prettier/prettier */
 @Entity()
 export class Notes {
-    id: number;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ length: 255 })
-    name: string;
+  @ApiProperty()
+  @Column({ length: 255 })
+  name: string;
 
-    @Column()
-    date: number;
+  @ApiProperty()
+  @CreateDateColumn()
+  date: Date;
 
-    @Column({default: ' '})
-    text: string;
+  @ApiProperty()
+  @Column({ default: ' ' })
+  text: string;
 
-    // @Column()
-    // manager_id: number;
+  @ApiProperty({ type: () => Person })
+  @ManyToOne((type) => Person, (user_m) => user_m.managers)
+  user_m: Person;
 
-    // @Column()
-    // persone_id: number;
+  @ApiProperty({ type: () => Person })
+  @ManyToOne((type) => Person, (user_p) => user_p.person)
+  user_p: Person;
 
-    @ManyToMany(() => Person, person => person.notes)
-    person: Person[];
-
-    @ManyToOne(type => Person, user_m => user_m.managers)
-    user_m: Person
-
-    // @ManyToOne(type => Person, user_p => user_p.person)
-    // user_p: Person
+  @ApiProperty({ type: () => [Person] })
+  @ManyToMany(() => Person, (person) => person.notes)
+  person: Person[];
 }

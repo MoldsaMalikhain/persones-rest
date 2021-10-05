@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 let config: TypeOrmModuleOptions;
 

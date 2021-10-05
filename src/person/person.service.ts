@@ -30,33 +30,9 @@ export class PersonService {
     private readonly roleServise: RoleService,
   ) {}
 
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'Testus',
-      password: 'password',
-      role: 'user',
-    },
-    {
-      userId: 2,
-      username: 'SomeDude',
-      password: 'passnotword',
-      role: 'admin',
-    },
-  ];
-
   async create(personeDetails: CreatePersonesDto): Promise<PersonRO> {
-    const {
-      firstname,
-      username,
-      age,
-      nameOnProject,
-      startDate,
-      endDate,
-      englishLvl,
-      password,
-      role,
-    } = personeDetails;
+    const { username, role, skills, notes, absences, salaries, managers } =
+      personeDetails;
 
     const qb = await getRepository(Person)
       .createQueryBuilder('person')
@@ -64,7 +40,7 @@ export class PersonService {
     const pr = await qb.getOne();
 
     if (pr) {
-      const err = { username: 'Name and Name On Project must be unique' };
+      const err = { username: 'Username must be unique' };
       throw new HttpException(
         { message: 'Input data validation faild', err },
         HttpStatus.BAD_REQUEST,
@@ -73,20 +49,17 @@ export class PersonService {
 
     const newPerson = new Person();
 
-    newPerson.nameOnProject = nameOnProject;
-    newPerson.englishLvl = englishLvl;
-    newPerson.firstname = firstname;
-    newPerson.startDate = startDate;
-    newPerson.password = password;
-    newPerson.username = username;
-    newPerson.endDate = endDate;
-    newPerson.age = age;
+    newPerson.skills = await pushIn(skills, this.skillsRepository);
+    newPerson.notes = await pushIn(notes, this.notesRepository);
+    newPerson.notes = await pushIn(managers, this.notesRepository);
+    newPerson.absences = await pushIn(absences, this.absencesRepository);
+    newPerson.salaries = await pushIn(salaries, this.salariesRepository);
 
-    newPerson.role = null;
-    if (role) newPerson.role = await this.roleServise.findByName(role);
+    newPerson.role = await this.roleServise.findByName(role);
 
     try {
-      const savePerson = await this.personRepository.save(newPerson);
+      const created = await Object.assign(personeDetails, newPerson);
+      const savePerson = await this.personRepository.save(created);
       return await this.buildPersonRo(savePerson);
     } catch (error) {
       throw new HttpException(
@@ -106,20 +79,12 @@ export class PersonService {
     const { username, role, skills, notes, absences, salaries, managers } =
       personeDetails;
 
-    const qb = await getRepository(Person)
-      .createQueryBuilder('person')
-      .where('person.username = :username', { username });
-    const pr = await qb.getOne();
-    if (pr) {
-      const err = { username: 'Name is not eveilable' };
-      throw new HttpException(
-        { message: 'Input data validation faild', err },
-        HttpStatus.BAD_REQUEST,
-      );
+    if (role) {
+      toUpdate.role = null;
+      toUpdate.role = await this.roleRepository.findOneOrFail({
+        where: { name: role },
+      });
     }
-
-    toUpdate.role = null;
-    if (role) toUpdate.role = await this.roleRepository.findOneOrFail(role);
 
     toUpdate.skills = await pushIn(skills, this.skillsRepository);
     toUpdate.notes = await pushIn(notes, this.notesRepository);
@@ -132,20 +97,30 @@ export class PersonService {
     return this.personRepository.save(updated);
   }
 
-  async createNote(noteDto: CreateNotesDto, person: any) {
-    const { name, text, date, persones } = noteDto;
-
+  async createNote(noteDto: CreateNotesDto, person: any): Promise<Notes> {
+    const { user_p } = noteDto;
+    const user_m: string = person.username;
     const newNote = new Notes();
 
-    newNote.name = name;
-    newNote.date = date;
-    newNote.text = text;
-
-    newNote.person = await pushIn(persones, this.personRepository);
+    newNote.user_p = await this.findByName(user_p);
     newNote.user_m = await this.findByName(person.username);
 
+    const persones = [user_p, user_m];
+
+    const elements = [];
+
+    for (let item = 0; item < persones.length; item++) {
+      const element = await this.personRepository.findOneOrFail({
+        where: { username: persones[item] },
+      });
+      elements.push(element);
+    }
+
+    newNote.person = await elements;
+
     try {
-      return await this.notesRepository.save(newNote);
+      const created = await Object.assign(noteDto, newNote);
+      return await this.notesRepository.save(created);
     } catch (error) {
       throw new HttpException(
         { message: 'Data save faild', error },
@@ -154,19 +129,13 @@ export class PersonService {
     }
   }
 
-  async updateNote(updateDto: CreateNotesDto, _id: number) {
+  async updateNote(updateDto: CreateNotesDto, _id: number): Promise<Notes> {
     const toUpdate = await this.notesRepository.findOneOrFail(_id);
     console.log(toUpdate);
 
-    const { name, text } = updateDto;
-
-    toUpdate.name = name;
-    toUpdate.text = text;
-    // if (user_p)
-    //   toUpdate.user_p = await this.personRepository.findOneOrFail(user_p);
-
     try {
-      return await this.notesRepository.save(toUpdate);
+      const created = await Object.assign(updateDto, toUpdate);
+      return await this.notesRepository.save(created);
     } catch (error) {
       throw new HttpException(
         { message: 'Data save faild', error },
@@ -177,14 +146,23 @@ export class PersonService {
 
   async getAll(): Promise<Person[]> {
     return await this.personRepository.find({
-      relations: ['managers', 'notes'],
+      relations: [
+        'managers',
+        'notes',
+        'skills',
+        'role',
+        'salaries',
+        'absences',
+        'person',
+        'persones',
+      ],
     });
   }
 
   async getById(_id: number): Promise<Person> {
     return await this.personRepository.findOneOrFail({
       where: { id: _id },
-      relations: ['managers', 'notes'],
+      relations: ['managers', 'notes', 'skills', 'role', 'salaries'],
     });
   }
 
@@ -205,31 +183,43 @@ export class PersonService {
     return true;
   }
 
-  async findByName(username: string): Promise<Person> {
+  async findByName(_username: string): Promise<Person> {
     const byName = this.personRepository.findOneOrFail({
       where: {
-        username: username,
+        username: _username,
       },
       relations: ['role'],
     });
     if (!byName) return null;
-    console.log(byName);
     return byName;
   }
 
-  async findOne(username: string): Promise<User | undefined> {
-    return await this.users.find((user) => user.username === username);
-  }
+  // private readonly users = [
+  //   {
+  //     userId: 1,
+  //     username: 'Testus',
+  //     password: 'password',
+  //     role: 'user',
+  //   },
+  //   {
+  //     userId: 2,
+  //     username: 'SomeDude',
+  //     password: 'passnotword',
+  //     role: 'admin',
+  //   },
+  // ];
+
+  // async findOne(username: string): Promise<User | undefined> {
+  //   return await this.users.find((user) => user.username === username);
+  // }
 
   async buildPersonRo(_person: Person) {
     const personRo = {
       id: _person.id,
       nameOnProject: _person.nameOnProject,
       englishLvl: _person.englishLvl,
-      startDate: _person.startDate,
       password: _person.password,
       username: _person.username,
-      endDate: _person.endDate,
       age: _person.age,
       role: _person.role,
     };

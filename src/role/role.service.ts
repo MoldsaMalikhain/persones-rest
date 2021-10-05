@@ -3,7 +3,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import CreateRoleDto from 'src/dto/create/role-create.dto';
 import { Role } from 'src/entity/role.entity';
 import { getRepository, Repository } from 'typeorm';
-
+/**
+ * TODO
+ * implement heirarhy for roles
+ *
+ * from 0 to 3
+ *
+ * 0 for guests
+ * 1 for standart user
+ * 2 for managers and reductors
+ * 3 for admin "private depth"
+ *
+ * when we create new role we delegate name and depth
+ */
 @Injectable()
 export class RoleService {
   constructor(

@@ -10,7 +10,9 @@ export class NoteService {
   ) {}
 
   async getAll() {
-    return this.noteRepository.find({ relations: ['user_m', 'person'] });
+    return this.noteRepository.find({
+      relations: ['user_m', 'person', 'user_p'],
+    });
   }
 
   async delete(_id: number) {
